@@ -17,6 +17,7 @@
                         </div>
                     @endif
 
+                    <h4>{{ __('Active Invitations') }}</h4>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -29,7 +30,41 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($invitations as $invitation)
+                            @foreach ($invitations->where('status', 'active') as $invitation)
+                                <tr>
+                                    <td>{{ $invitation->guest_name }}</td>
+                                    <td>{{ $invitation->guest_phone }}</td>
+                                    <td>{{ $invitation->date }}</td>
+                                    <td>{{ $invitation->time }}</td>
+                                    <td>{{ ucfirst($invitation->status) }}</td>
+                                    <td>
+                                        <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>
+                                        <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this invitation?')">{{ __('Delete') }}</button>
+                                        </form>
+                                        <a href="{{ route('invitations.share', $invitation->id) }}" class="btn btn-sm btn-info">{{ __('Share') }}</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    <h4>{{ __('Inactive Invitations') }}</h4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>{{ __('Guest Name') }}</th>
+                                <th>{{ __('Guest Phone') }}</th>
+                                <th>{{ __('Date') }}</th>
+                                <th>{{ __('Time') }}</th>
+                                <th>{{ __('Status') }}</th>
+                                <th>{{ __('Actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($invitations->where('status', 'inactive') as $invitation)
                                 <tr>
                                     <td>{{ $invitation->guest_name }}</td>
                                     <td>{{ $invitation->guest_phone }}</td>

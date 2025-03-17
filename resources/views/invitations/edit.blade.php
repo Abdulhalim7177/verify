@@ -32,7 +32,15 @@
                                 <label for="date">{{ __('Date') }}</label>
                                 <input type="date" name="date" id="date" class="form-control"
                                     value="{{ $invitation->date }}" required>
+                            </div>  @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
+                        @endif
                         
 
                             <div class="form-group">
