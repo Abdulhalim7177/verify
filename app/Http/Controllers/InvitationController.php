@@ -7,6 +7,7 @@ use App\Models\Invitation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Carbon\Carbon;
 
 class InvitationController extends Controller
 {
@@ -31,10 +32,15 @@ class InvitationController extends Controller
             'guest_name' => 'required|string|max:255',
             'guest_phone' => 'required|string|max:20',
             'description' => 'required|string',
-            'date' => 'required|date',
+            'date' => 'required|date|after_or_equal:today',
             'time' => 'required',
             'status' => 'required|in:active,inactive',
         ]);
+        // Check if the date and time are not in the past
+        $dateTime = Carbon::parse($request->date . ' ' . $request->time);
+        if ($dateTime->isPast()) {
+            return redirect()->back()->withErrors(['date' => 'The date and time must be in the future.'])->withInput();
+        }
 
         // Get the authenticated user
         $user = Auth::user();
@@ -99,10 +105,16 @@ class InvitationController extends Controller
             'guest_name' => 'required|string|max:255',
             'guest_phone' => 'required|string|max:20',
             'description' => 'required|string',
-            'date' => 'required|date',
+            'date' => 'required|date|after_or_equal:today',
             'time' => 'required',
             'status' => 'required|in:active,inactive',
         ]);
+
+        // Check if the date and time are not in the past
+        $dateTime = Carbon::parse($request->date . ' ' . $request->time);
+        if ($dateTime->isPast()) {
+            return redirect()->back()->withErrors(['date' => 'The date and time must be in the future.']);
+        }
 
         // Find the invitation
         $invitation = Invitation::findOrFail($id);
