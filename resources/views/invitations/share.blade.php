@@ -12,6 +12,7 @@
                     <!-- Display the QR code -->
                     <img src="{{ asset('storage/' . $invitation->qrcode) }}" alt="Invitation QR Code" class="img-fluid mb-3">
                     <p class="text-muted">Scan the QR code to view invitation details.</p>
+                    <!-- Copy URL button -->
                 </div>
             </div>
         </div>

@@ -14,19 +14,18 @@ class InvitationController extends Controller
     // Show all invitations for the authenticated user
     public function index()
     {
-        $now = Carbon::now();
-    
-        // Update expired invitations
-        Invitation::where('status', 'active')
-            ->whereRaw("STR_TO_DATE(CONCAT(date, ' ', time), '%Y-%m-%d %H:%i:%s') < ?", [$now])
-            ->update(['status' => 'inactive']);
-    
+        // $now = Carbon::now();
+
+        // // Update expired invitations
+        // Invitation::where('status', 'active')
+        //     ->whereRaw("STR_TO_DATE(CONCAT(date, ' ', time), '%Y-%m-%d %H:%i:%s') < ?", [$now])
+        //     ->update(['status' => 'inactive']);
+
         // Get the updated invitations for the authenticated user
         $invitations = Auth::user()->invitations;
-    
+
         return view('invitations.index', compact('invitations'));
     }
-    
 
     // Show the invitation creation form
     public function create()
