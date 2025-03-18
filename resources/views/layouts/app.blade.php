@@ -117,7 +117,8 @@
                                                 <div class="menu-content d-flex align-items-center px-3">
                                                     <!--begin::Avatar-->
                                                     <div class="symbol symbol-50px me-5">
-                                                        <img alt="Logo" src="{{ Auth::user()->image }}" />
+                                                        <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
+                                                        alt="" />
                                                     </div>
                                                     <!--end::Avatar-->
                                                     <!--begin::Username-->
@@ -139,13 +140,13 @@
                                             <!--end::Menu separator-->
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-5">
-                                                <a href="" class="menu-link px-5">My Profile</a>
+                                                <a href="{{ route('profile.edit') }}" class="menu-link px-5">Update Profile</a>
                                             </div>
                                             <!--end::Menu item-->
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-5">
                                                 <a href="" class="menu-link px-5">
-                                                    <span class="menu-text">My Projects</span>
+                                                    <span class="menu-text">My Invitations</span>
                                                     <span class="menu-badge">
                                                         <span
                                                             class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
@@ -157,10 +158,6 @@
                                             <div class="separator my-2"></div>
                                             <!--end::Menu separator-->
                                             <!--begin::Menu item-->
-                                            <div class="menu-item px-5 my-1">
-                                                <a href="" class="menu-link px-5">Account Settings</a>
-                                            </div>
-                                            <!--end::Menu item-->
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-5">
                                                 <a href="{{ route('logout') }}" class="menu-link px-5"
