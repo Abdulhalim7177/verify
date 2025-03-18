@@ -8526,52 +8526,6 @@
 							<h2>User Details</h2>
 						</div>
 						<!--end::Card title-->
-						<!--begin::Card toolbar-->
-						<div class="card-toolbar gap-3">
-							<!--begin::Chat-->
-							<button class="btn btn-sm btn-light btn-active-light-primary" data-kt-drawer-show="true" data-kt-drawer-target="#kt_drawer_chat">
-							<i class="ki-duotone ki-message-text-2 fs-2">
-								<span class="path1"></span>
-								<span class="path2"></span>
-								<span class="path3"></span>
-							</i>Chat</button>
-							<!--end::Chat-->
-							<!--begin::Chat-->
-							<a href="../../demo8/dist/apps/inbox/reply.html" class="btn btn-sm btn-light btn-active-light-primary">
-							<i class="ki-duotone ki-messages fs-2">
-								<span class="path1"></span>
-								<span class="path2"></span>
-								<span class="path3"></span>
-								<span class="path4"></span>
-								<span class="path5"></span>
-							</i>Message</a>
-							<!--end::Chat-->
-							<!--begin::Action menu-->
-							<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-								<i class="ki-duotone ki-dots-square fs-2">
-									<span class="path1"></span>
-									<span class="path2"></span>
-									<span class="path3"></span>
-									<span class="path4"></span>
-								</i>
-							</a>
-							<!--begin::Menu-->
-							<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true">
-								<!--begin::Menu item-->
-								<div class="menu-item px-3">
-									<a href="../../demo8/dist/apps/contacts/edit-contact.html" class="menu-link px-3">Edit</a>
-								</div>
-								<!--end::Menu item-->
-								<!--begin::Menu item-->
-								<div class="menu-item px-3">
-									<a href="#" class="menu-link px-3" id="kt_contact_delete" data-kt-redirect="../../demo8/dist/apps/contacts/getting-started.html">Delete</a>
-								</div>
-								<!--end::Menu item-->
-							</div>
-							<!--end::Menu-->
-							<!--end::Action menu-->
-						</div>
-						<!--end::Card toolbar-->
 					</div>
 					<!--end::Card header-->
 					<!--begin::Card body-->
