@@ -8526,6 +8526,42 @@
 							<h2>User Details</h2>
 						</div>
 						<!--end::Card title-->
+						<!--begin::Card toolbar-->
+						<div class="card-toolbar gap-3">
+							<!--begin::Chat-->
+							<button class="btn btn-sm btn-light btn-active-light-primary" data-kt-drawer-show="true" data-kt-drawer-target="#kt_drawer_chat">
+							<i class="ki-duotone ki-message-text-2 fs-2">
+								<span class="path1"></span>
+								<span class="path2"></span>
+								<span class="path3"></span>
+							</i>Chat</button>
+							<!--end::Chat-->
+							<!--begin::Chat-->
+							<a href="../../demo8/dist/apps/inbox/reply.html" class="btn btn-sm btn-light btn-active-light-primary">
+							<i class="ki-duotone ki-messages fs-2">
+								<span class="path1"></span>
+								<span class="path2"></span>
+								<span class="path3"></span>
+								<span class="path4"></span>
+								<span class="path5"></span>
+							</i>Message</a>
+							<!--end::Chat-->
+							<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true">
+								<!--begin::Menu item-->
+								<div class="menu-item px-3">
+									<a href="../../demo8/dist/apps/contacts/edit-contact.html" class="menu-link px-3">Edit</a>
+								</div>
+								<!--end::Menu item-->
+								<!--begin::Menu item-->
+								<div class="menu-item px-3">
+									<a href="#" class="menu-link px-3" id="kt_contact_delete" data-kt-redirect="../../demo8/dist/apps/contacts/getting-started.html">Delete</a>
+								</div>
+								<!--end::Menu item-->
+							</div>
+							<!--end::Menu-->
+							<!--end::Action menu-->
+						</div>
+						<!--end::Card toolbar-->
 					</div>
 					<!--end::Card header-->
 					<!--begin::Card body-->
@@ -8533,14 +8569,14 @@
 						<!--begin::Profile-->
 						<div class="d-flex gap-7 align-items-center">
 							<!--begin::Avatar-->
-							<div class="symbol symbol-circle symbol-100px">
-								<img src="assets/media/avatars/300-6.jpg" alt="image" />
+							<div class="symbol symbol-circle symbol-100px"> <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
+								alt="" />
 							</div>
 							<!--end::Avatar-->
 							<!--begin::Contact details-->
 							<div class="d-flex flex-column gap-2">
 								<!--begin::Name-->
-								<h3 class="mb-0">Emma Smith</h3>
+								<h3 class="mb-0">{{ Auth::user()->name }}</h3>
 								<!--end::Name-->
 								<!--begin::Email-->
 								<div class="d-flex align-items-center gap-2">
@@ -8548,7 +8584,7 @@
 										<span class="path1"></span>
 										<span class="path2"></span>
 									</i>
-									<a href="#" class="text-muted text-hover-primary">smith@kpmg.com</a>
+									<a href="#" class="text-muted text-hover-primary">{{ Auth::user()->email }}</a>
 								</div>
 								<!--end::Email-->
 								<!--begin::Phone-->
@@ -8557,7 +8593,16 @@
 										<span class="path1"></span>
 										<span class="path2"></span>
 									</i>
-									<a href="#" class="text-muted text-hover-primary">+6141 234 567</a>
+									<a href="#" class="text-muted text-hover-primary">{{ Auth::user()->phone }}</a>
+								</div>
+								<!--end::Phone-->
+								<!--begin::Phone-->
+								<div class="d-flex align-items-center gap-2">
+									<i class="ki-duotone ki-phone fs-2">
+										<span class="path1"></span>
+										<span class="path2"></span>
+									</i>
+									<a href="#" class="text-muted text-hover-primary">{{ Auth::user()->altphone }}</a>
 								</div>
 								<!--end::Phone-->
 							</div>
