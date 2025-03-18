@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Create Invitation') }}</div>
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">{{ __('Create Invitation') }}</div>
 
                 <div class="card-body">
                     <!-- Display success message -->
@@ -15,7 +15,7 @@
                         </div>
                         <!-- Show share button if invitation is created -->
                         @if (session('invitation_id'))
-                            <div class="text-center">
+                            <div class="text-center my-3">
                                 <a href="{{ route('invitations.share', session('invitation_id')) }}" class="btn btn-info">{{ __('Share Invitation') }}</a>
                             </div>
                         @endif
@@ -43,15 +43,16 @@
                             <label for="date">{{ __('Date') }}</label>
                             <input type="date" name="date" id="date" class="form-control" required>
                         </div>
+
                         @if ($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
                         <div class="form-group">
                             <label for="time">{{ __('Time') }}</label>
