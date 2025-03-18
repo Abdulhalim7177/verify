@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{{-- <!DOCTYPE html>
 <html lang="en">
 	<!--begin::Head-->
 	<head><base href="../../"/>
@@ -4755,10 +4755,10 @@
 	</body>
 	<!--end::Body-->
 </html>
+ --}}
 
 
-
-{{-- @extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -4834,4 +4834,4 @@
         </div>
     </div>
 </div>
-@endsection --}}
+@endsection
