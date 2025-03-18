@@ -113,119 +113,9 @@
 												</a>
 											</div>
 											<!--end::Menu item-->
-											<!--begin::Menu item-->
-											<div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" data-kt-menu-offset="-15px, 0">
-												<a href="#" class="menu-link px-5">
-													<span class="menu-title">My Subscription</span>
-													<span class="menu-arrow"></span>
-												</a>
-												<!--begin::Menu sub-->
-												<div class="menu-sub menu-sub-dropdown w-175px py-4">
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/referrals.html" class="menu-link px-5">Referrals</a>
-													</div>
-													<!--end::Menu item-->
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/billing.html" class="menu-link px-5">Billing</a>
-													</div>
-													<!--end::Menu item-->
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/statements.html" class="menu-link px-5">Payments</a>
-													</div>
-													<!--end::Menu item-->
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/statements.html" class="menu-link d-flex flex-stack px-5">Statements
-														<span class="ms-2" data-bs-toggle="tooltip" title="View your statements">
-															<i class="ki-duotone ki-information fs-7">
-																<span class="path1"></span>
-																<span class="path2"></span>
-																<span class="path3"></span>
-															</i>
-														</span></a>
-													</div>
-													<!--end::Menu item-->
-													<!--begin::Menu separator-->
-													<div class="separator my-2"></div>
-													<!--end::Menu separator-->
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<div class="menu-content px-3">
-															<label class="form-check form-switch form-check-custom form-check-solid">
-																<input class="form-check-input w-30px h-20px" type="checkbox" value="1" checked="checked" name="notifications" />
-																<span class="form-check-label text-muted fs-7">Notifications</span>
-															</label>
-														</div>
-													</div>
-													<!--end::Menu item-->
-												</div>
-												<!--end::Menu sub-->
-											</div>
-											<!--end::Menu item-->
-											<!--begin::Menu item-->
-											<div class="menu-item px-5">
-												<a href="../../demo8/dist/account/statements.html" class="menu-link px-5">My Statements</a>
-											</div>
-											<!--end::Menu item-->
 											<!--begin::Menu separator-->
 											<div class="separator my-2"></div>
 											<!--end::Menu separator-->
-											<!--begin::Menu item-->
-											<div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" data-kt-menu-offset="-15px, 0">
-												<a href="#" class="menu-link px-5">
-													<span class="menu-title position-relative">Language
-													<span class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0">English
-													<img class="w-15px h-15px rounded-1 ms-2" src="assets/media/flags/united-states.svg" alt="" /></span></span>
-												</a>
-												<!--begin::Menu sub-->
-												<div class="menu-sub menu-sub-dropdown w-175px py-4">
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/settings.html" class="menu-link d-flex px-5 active">
-														<span class="symbol symbol-20px me-4">
-															<img class="rounded-1" src="assets/media/flags/united-states.svg" alt="" />
-														</span>English</a>
-													</div>
-													<!--end::Menu item-->
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/settings.html" class="menu-link d-flex px-5">
-														<span class="symbol symbol-20px me-4">
-															<img class="rounded-1" src="assets/media/flags/spain.svg" alt="" />
-														</span>Spanish</a>
-													</div>
-													<!--end::Menu item-->
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/settings.html" class="menu-link d-flex px-5">
-														<span class="symbol symbol-20px me-4">
-															<img class="rounded-1" src="assets/media/flags/germany.svg" alt="" />
-														</span>German</a>
-													</div>
-													<!--end::Menu item-->
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/settings.html" class="menu-link d-flex px-5">
-														<span class="symbol symbol-20px me-4">
-															<img class="rounded-1" src="assets/media/flags/japan.svg" alt="" />
-														</span>Japanese</a>
-													</div>
-													<!--end::Menu item-->
-													<!--begin::Menu item-->
-													<div class="menu-item px-3">
-														<a href="../../demo8/dist/account/settings.html" class="menu-link d-flex px-5">
-														<span class="symbol symbol-20px me-4">
-															<img class="rounded-1" src="assets/media/flags/france.svg" alt="" />
-														</span>French</a>
-													</div>
-													<!--end::Menu item-->
-												</div>
-												<!--end::Menu sub-->
-											</div>
-											<!--end::Menu item-->
 											<!--begin::Menu item-->
 											<div class="menu-item px-5 my-1">
 												<a href="../../demo8/dist/account/settings.html" class="menu-link px-5">Account Settings</a>
@@ -255,24 +145,7 @@
 						<div class="hover-scroll-overlay-y px-2 my-5 my-lg-5" id="kt_aside_menu_wrapper" data-kt-scroll="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="{default: '#kt_aside_toolbar, #kt_aside_footer', lg: '#kt_header, #kt_aside_toolbar, #kt_aside_footer'}" data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="5px">
 							<!--begin::Menu-->
 							<div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" id="#kt_aside_menu" data-kt-menu="true">
-								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<!--begin:Menu link-->
-									<span class="menu-link">
-										<span class="menu-icon">
-											<i class="ki-duotone ki-element-11 fs-2">
-												<span class="path1"></span>
-												<span class="path2"></span>
-												<span class="path3"></span>
-												<span class="path4"></span>
-											</i>
-										</span>
-										<span class="menu-title">Dashboards</span>
-										<span class="menu-arrow"></span>
-									</span>
-									<!--end:Menu link-->
-								</div>
-								<!--end:Menu item-->
+
 							
 
 
