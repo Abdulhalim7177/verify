@@ -206,7 +206,7 @@
                                                 <span class="path2"></span>
                                             </i>
                                         </span>
-                                        <span class="menu-title">User Management</span>
+                                        <span class="menu-title">User</span>
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
