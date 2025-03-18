@@ -938,32 +938,6 @@
 									<!--end:Menu link-->
 								</div>
 								<!--end:Menu item-->
-								<!--begin:Menu item-->
-								<div class="menu-item pt-5">
-									<!--begin:Menu content-->
-									<div class="menu-content">
-										<span class="menu-heading fw-bold text-uppercase fs-7">Pages</span>
-									</div>
-									<!--end:Menu content-->
-								</div>
-								<!--end:Menu item-->
-								<!--begin:Menu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-									<!--begin:Menu link-->
-									<span class="menu-link">
-										<span class="menu-icon">
-											<i class="ki-duotone ki-address-book fs-2">
-												<span class="path1"></span>
-												<span class="path2"></span>
-												<span class="path3"></span>
-											</i>
-										</span>
-										<span class="menu-title">User Profile</span>
-										<span class="menu-arrow"></span>
-									</span>
-									<!--end:Menu link-->
-								</div>
-								<!--end:Menu item-->
 							
 
 
