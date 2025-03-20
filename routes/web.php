@@ -37,8 +37,8 @@ Route::get('/invitations/share/{id}', [InvitationController::class, 'share'])->n
 // Admin routes
 // Admin Authentication Routes
 Route::prefix('admin')->group(function () {
-    Route::get('/login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('/login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'login']);
+    Route::get('/', [App\Http\Controllers\Admin\Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/', [App\Http\Controllers\Admin\Auth\LoginController::class, 'login']);
     Route::post('/logout', [App\Http\Controllers\Admin\Auth\LoginController::class, 'logout'])->name('admin.logout');
 
     // Admin Dashboard Route
