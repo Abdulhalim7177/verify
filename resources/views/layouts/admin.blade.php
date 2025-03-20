@@ -206,7 +206,7 @@
                                                 <span class="path2"></span>
                                             </i>
                                         </span>
-                                        <span class="menu-title">User</span>
+                                        <span class="menu-title">User Management</span>
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
@@ -222,7 +222,7 @@
                                                 <span class="path2"></span>
                                             </i>
                                         </span>
-                                        <span class="menu-title">Invitations</span>
+                                        <span class="menu-title">Invitations Management</span>
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
