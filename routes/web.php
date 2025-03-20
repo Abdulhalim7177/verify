@@ -34,9 +34,26 @@ Route::delete('/invitations/{id}', [InvitationController::class, 'destroy'])->na
 Route::get('/invitations/share/{id}', [InvitationController::class, 'share'])->name('invitations.share');
 
 
+// Admin routes
+// Admin Authentication Routes
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::post('/login', [App\Http\Controllers\Admin\Auth\LoginController::class, 'login']);
+    Route::post('/logout', [App\Http\Controllers\Admin\Auth\LoginController::class, 'logout'])->name('admin.logout');
+
+    // Admin Dashboard Route
+    Route::middleware('auth:admin')->group(function () {
+        Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+        Route::resource('/users', App\Http\Controllers\Admin\UserController::class); // User management
+    });
+});
+
 // QR Code Scanning Routes
 Route::get('/scan', [ProfileController::class, 'showScanForm'])->name('scan.form');
 Route::post('/scan/process', [ProfileController::class, 'processScan'])->name('scan.process');
 Route::get('/scan/result', function () {
     return view('scan.result'); // Updated view path
 })->name('scan.result');
+
+
+
