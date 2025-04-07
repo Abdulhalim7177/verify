@@ -81,6 +81,7 @@
 										</div>
 									@endif
 									<!--end::Phone-->
+									
 									<!--begin::Role-->
 									@if(Auth::user()->role)
 										<div class="d-flex align-items-center gap-2">
