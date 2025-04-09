@@ -158,12 +158,12 @@
                                             <div class="separator my-2"></div>
                                             <!--end::Menu separator-->
                                             <!--begin::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-5">
+                                             <!--begin::Menu item-->
+                                             <div class="menu-item px-5">
                                                 <a href="{{ route('logout') }}" class="menu-link px-5"
                                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign
                                                     Out</a>
-                                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
                                                     style="display: none;">
                                                     @csrf
                                                 </form>

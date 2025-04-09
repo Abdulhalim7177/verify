@@ -13,19 +13,25 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
 
-        if (Auth::guard('admin')->attempt($credentials)) {
-            return redirect()->route('admin.dashboard');
-        }
+    public function login(Request $request){
+        $remember_me = $request->has('remember_me') ? true : false;
+  
+        if (auth()->guard('admin')->attempt(['email' => $request->input("email"), 'password' => $request->input("password")], $remember_me)) {
+            
+            return redirect() ->jtion login(Request $request)
+    // {
+    //     $credentials = $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required',
+    //     ]);
 
-        return back()->withErrors(['email' => 'Invalid credentials']);
-    }
+    //     if (Auth::guard('admin')->attempt($credentials)) {
+    //         return redirect()->route('admin.dashboard');
+    //     }
+
+    //     return back()->withErrors(['email' => 'Invalid credentials']);
+    // }
 
     public function logout()
     {
