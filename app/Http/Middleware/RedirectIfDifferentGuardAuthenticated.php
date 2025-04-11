@@ -4,24 +4,17 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfDifferentGuardAuthenticated
 {
-    public function handle(Request $request, Closure $next, $guard, $redirectTo)
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
     {
-        $guards = ['web', 'admin'];
-
-        foreach ($guards as $checkGuard) {
-            if ($checkGuard !== $guard && Auth::guard($checkGuard)->check()) {
-                if ($checkGuard === 'admin') {
-                    return redirect()->route('admin.dashboard');
-                } elseif ($checkGuard === 'web') {
-                    return redirect($redirectTo); // e.g. /home
-                }
-            }
-        }
-
         return $next($request);
     }
 }
