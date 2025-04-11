@@ -3,6 +3,7 @@
 @section('content')
 <div class="container">
     <h1>User Management</h1>
+    <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-3">Create User</a>
     <table class="table table-bordered">
         <thead>
             <tr>
