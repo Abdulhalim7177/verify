@@ -49,16 +49,34 @@ Route::middleware('auth')->group(function () {
     Route::get('/invitations/share/{id}', [InvitationController::class, 'share'])->name('invitations.share');
 });
 
+// // Admin Routes
+// Route::prefix('admin')->group(function () {
+//     // Admin Authentication Routes
+//     Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+//     Route::post('/', [AdminLoginController::class, 'login']);
+//     Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+
+//     // Admin Protected Routes
+//     Route::middleware('auth:admin')->group(function () {
+//         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+//         Route::resource('/users', AdminUserController::class)->names('admin.users'); // User management
+//     });
+// });
+
 // Admin Routes
 Route::prefix('admin')->group(function () {
-    // Admin Authentication Routes
-    Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login')-> middleware('guest');
-    Route::post('/', [AdminLoginController::class, 'login']);
-    Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
-    // Admin Protected Routes
-    Route::middleware('auth:admin')->group(function () {
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-        Route::resource('/users', AdminUserController::class)->names('admin.users'); // User management
+    // Admin Guest Routes (Only accessible if NOT logged in as admin)
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+        Route::post('/', [AdminLoginController::class, 'login']);
     });
+
+    // Admin Authenticated Routes (Only accessible if logged in as admin)
+    Route::middleware('auth:admin')->group(function () {
+        Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+        Route::resource('/users', AdminUserController::class)->names('admin.users');
+    });
+
 });
