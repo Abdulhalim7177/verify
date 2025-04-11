@@ -19,7 +19,12 @@ class LoginController extends Controller
   
         if (auth()->guard('admin')->attempt(['email' => $request->input("email"), 'password' => $request->input("password")], $remember_me)) {
             
-            return redirect() ->jtion login(Request $request)
+            return redirect() -> route('admin.dashboard');
+        }
+        return redirect()->back()->with(['error' => 'error logging in']); 
+     }
+
+    // public function login(Request $request)
     // {
     //     $credentials = $request->validate([
     //         'email' => 'required|email',

@@ -52,7 +52,7 @@ Route::middleware('auth')->group(function () {
 // Admin Routes
 Route::prefix('admin')->group(function () {
     // Admin Authentication Routes
-    Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
+    Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login')-> middleware('guest');
     Route::post('/', [AdminLoginController::class, 'login']);
     Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
 
