@@ -215,7 +215,7 @@
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
                                     <a class="menu-link"
-                                        href="{{ route('invitations.index') }}">
+                                        href="{{ route('admin.invitations.index') }}">
                                         <span class="menu-icon">
                                             <i class="ki-duotone ki-abstract-13 fs-2">
                                                 <span class="path1"></span>

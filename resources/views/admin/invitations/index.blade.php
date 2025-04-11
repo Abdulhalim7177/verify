@@ -108,7 +108,7 @@
                         <tr>
                             <td>{{ $invitation->user->name }}</td>
                             <td>{{ $invitation->guest_name }}</td>
-                            <td>{{ $invitation->date->format('M d, Y') }} at {{ $invitation->time }}</td>
+                            <td>{{ \Carbon\Carbon::parse($invitation->date)->format('M d, Y') }} at {{ \Carbon\Carbon::parse($invitation->time)->format('h:i A') }}</td>
                             <td>
                                 <span class="badge badge-{{ $invitation->status == 'active' ? 'success' : 'danger' }}">
                                     {{ ucfirst($invitation->status) }}

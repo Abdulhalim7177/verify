@@ -19,7 +19,7 @@
                     <p><strong>Name:</strong> {{ $invitation->guest_name }}</p>
                     <p><strong>Phone:</strong> {{ $invitation->guest_phone }}</p>
                     <p><strong>Event:</strong> {{ $invitation->description }}</p>
-                    <p><strong>Date:</strong> {{ $invitation->date->format('M d, Y') }} at {{ $invitation->time }}</p>
+                    <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($invitation->date)->format('M d, Y') }} at {{ \Carbon\Carbon::parse($invitation->time)->format('h:i A') }}</p>
                     <p>
                         <strong>Status:</strong> 
                         <span class="badge badge-{{ $invitation->status == 'active' ? 'success' : 'danger' }}">
