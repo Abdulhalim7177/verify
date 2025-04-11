@@ -63,6 +63,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
         Route::resource('/users', AdminUserController::class)->names('admin.users');
+
+        Route::resource('invitations', \App\Http\Controllers\Admin\InvitationController::class)
+        ->except(['create', 'store', 'edit']);
+    
+    Route::post('invitations/{invitation}/regenerate-qr', 
+        [\App\Http\Controllers\Admin\InvitationController::class, 'regenerateQr'])
+        ->name('admin.invitations.regenerate-qr');
     });
 
 });
