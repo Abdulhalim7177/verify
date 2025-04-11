@@ -8,39 +8,45 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    public function showLoginForm()
+    public function __construct()
     {
-        return view('admin.auth.login');
+        // Only guests can access login, except for logout
+        $this->middleware('guest:admin')->except('logout');
     }
 
+    public function showLoginForm()
+    {
+        return view('admin.auth.login'); // Make sure this exists
+    }
 
-    public function login(Request $request){
-        $remember_me = $request->has('remember_me') ? true : false;
-  
-        if (auth()->guard('admin')->attempt(['email' => $request->input("email"), 'password' => $request->input("password")], $remember_me)) {
-            
-            return redirect() -> route('admin.dashboard');
+    public function login(Request $request)
+    {
+        // Validate login input
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        $remember = $request->filled('remember');
+
+        // Try to login using admin guard
+        if (Auth::guard('admin')->attempt($credentials, $remember)) {
+            $request->session()->regenerate(); // ✅ prevents session fixation
+            return redirect()->route('admin.dashboard');
         }
-        return redirect()->back()->with(['error' => 'error logging in']); 
-     }
 
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->validate([
-    //         'email' => 'required|email',
-    //         'password' => 'required',
-    //     ]);
+        return back()->withErrors([
+            'email' => 'Invalid email or password.',
+        ])->withInput();
+    }
 
-    //     if (Auth::guard('admin')->attempt($credentials)) {
-    //         return redirect()->route('admin.dashboard');
-    //     }
-
-    //     return back()->withErrors(['email' => 'Invalid credentials']);
-    // }
-
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
         return redirect()->route('admin.login');
     }
 }
