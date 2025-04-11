@@ -15,8 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Authentication Routes
-Auth::routes();
+// Authentication Routes (Web Guard)
+Route::middleware('prevent.other.guard:web,/home')->group(function () {
+    Auth::routes();
+});
 
 // Home Routes
 Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -53,7 +55,7 @@ Route::middleware('auth')->group(function () {
 Route::prefix('admin')->group(function () {
 
     // Admin Guest Routes (Only accessible if NOT logged in as admin)
-    Route::middleware('guest:admin')->group(function () {
+    Route::middleware(['guest:admin', 'prevent.other.guard:admin,admin.dashboard'])->group(function () {
         Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
         Route::post('/', [AdminLoginController::class, 'login']);
     });
