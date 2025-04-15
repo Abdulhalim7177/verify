@@ -1,10 +1,13 @@
 <?php
 
+use App\Http\Middleware\SecurityGuard;
 use Illuminate\Foundation\Application;
-use Illuminate\Foundation\Configuration\Exceptions;
-use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\PreventAdminAccessUser;
 use App\Http\Middleware\PreventUserAccessAdmin;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\PreventOthersAccessSecurity;
+use App\Http\Middleware\PreventSecurityAccessOthers;
 
 
 return Application::configure(basePath: dirname(__DIR__))
