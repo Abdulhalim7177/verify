@@ -4,17 +4,24 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Auth;
 
 class PreventSecurityAccessOthers
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
+        // If the user is logged in as security, redirect them away from user/admin routes
+        if (Auth::guard('security')->check()) {
+            return redirect()->route('security.dashboard')->with('error', 'Security personnel cannot access user or admin pages.');
+        }
+
         return $next($request);
     }
 }

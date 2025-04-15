@@ -14,11 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        return [
-        // Add your middleware aliases here
-        'prevent.admin.user' => PreventAdminAccessUser::class,
-        'prevent.user.admin' => PreventUserAccessAdmin::class,
-        // ... other middleware aliases
+        return [ 
+            'prevent.user.admin' => PreventUserAccessAdmin::class,
+            'security.guard' => SecurityGuard::class,
+            'prevent.security.others' => PreventSecurityAccessOthers::class,
+            'prevent.others.security' => PreventOthersAccessSecurity::class,
+
             ];
         })
     ->withExceptions(function (Exceptions $exceptions) {

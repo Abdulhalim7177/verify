@@ -10,9 +10,14 @@ use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
+use App\Http\Controllers\Security\Auth\LoginController as SecurityLoginController;
+use App\Http\Controllers\Security\DashboardController as SecurityDashboardController;
 use App\Http\Middleware\AdminGuard;
+use App\Http\Middleware\SecurityGuard;
 use App\Http\Middleware\PreventAdminAccessUser;
 use App\Http\Middleware\PreventUserAccessAdmin;
+use App\Http\Middleware\PreventSecurityAccessOthers;
+use App\Http\Middleware\PreventOthersAccessSecurity;
 
 // Welcome Route
 Route::get('/', function () {
@@ -23,7 +28,7 @@ Route::get('/', function () {
 Auth::routes();
 
 // Authenticated User Routes
-Route::middleware(['auth', PreventAdminAccessUser::class])->group(function () {
+Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessOthers::class])->group(function () {
     // Home Routes
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/calendar', [HomeController::class, 'calendar'])->name('calendar');
@@ -53,9 +58,10 @@ Route::middleware(['auth', PreventAdminAccessUser::class])->group(function () {
     });
 });
 
+// Admin Routes
 Route::prefix('admin')->group(function () {
     // Admin Guest Routes (Only accessible if NOT logged in as admin)
-    Route::middleware(['guest:admin', PreventUserAccessAdmin::class])->group(function () {
+    Route::middleware(['guest:admin', PreventUserAccessAdmin::class, PreventSecurityAccessOthers::class])->group(function () {
         Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
         Route::post('/', [AdminLoginController::class, 'login']);
     });
@@ -78,5 +84,33 @@ Route::prefix('admin')->group(function () {
             Route::post('/{invitation}/regenerate-qr', [AdminInvitationController::class, 'regenerateQr'])
                 ->name('admin.invitations.regenerate-qr');
         });
+    });
+});
+
+// Security Routes
+Route::prefix('security')->group(function () {
+    // Security Guest Routes (Only accessible if NOT logged in as security)
+    Route::middleware(['guest:security', PreventUserAccessAdmin::class, PreventAdminAccessUser::class])->group(function () {
+        Route::get('/', [SecurityLoginController::class, 'showLoginForm'])->name('security.login');
+        Route::post('/', [SecurityLoginController::class, 'login']);
+    });
+
+    // Security Authenticated Routes (Only accessible if logged in as security)
+    Route::middleware(['auth:security', SecurityGuard::class])->group(function () {
+        Route::post('/logout', [SecurityLoginController::class, 'logout'])->name('security.logout');
+        Route::get('/dashboard', [SecurityDashboardController::class, 'index'])->name('security.dashboard');
+        
+        // Add more security-specific routes here as needed
+        
+        // Example: Security scan route
+        Route::get('/scan', function () {
+            return view('security.scan.index');
+        })->name('security.scan');
+        
+        // Example: Security verification route
+        Route::post('/verify', function () {
+            // Verification logic
+            return back()->with('success', 'Verification successful');
+        })->name('security.verify');
     });
 });
