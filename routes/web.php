@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
-
+use App\Http\Middleware\AdminGuard;
 // Welcome Route
 Route::get('/', function () {
     return view('welcome');
@@ -50,7 +50,8 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-// Admin Routes
+
+
 Route::prefix('admin')->group(function () {
     // Admin Guest Routes (Only accessible if NOT logged in as admin)
     Route::middleware('guest:admin')->group(function () {
@@ -59,14 +60,14 @@ Route::prefix('admin')->group(function () {
     });
 
     // Admin Authenticated Routes (Only accessible if logged in as admin)
-    Route::middleware('auth:admin')->group(function () {
+    Route::middleware(['auth:admin', AdminGuard::class])->group(function () {
         Route::post('/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-        
+
         // User Management
         Route::resource('/users', AdminUserController::class)
             ->names('admin.users');
-        
+
         // Invitation Management
         Route::prefix('invitations')->group(function () {
             Route::get('/', [AdminInvitationController::class, 'index'])->name('admin.invitations.index');
