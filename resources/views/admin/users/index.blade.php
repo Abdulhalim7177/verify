@@ -50,8 +50,8 @@
                                 <p><strong>Name:</strong> {{ $user->name }}</p>
                                 <p><strong>Email:</strong> {{ $user->email }}</p>
                                 <p><strong>Address:</strong> {{ $user->address }}</p>
-                                <p><strong>Image:</strong></p>
-                                <img src="{{ $user->image }}" alt="User Image" class="img-fluid">
+                                <img  src="{{ asset('storage/profile_images/' .$user->image ) }}" 
+                                alt="User Image" class="img-fluid">
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
