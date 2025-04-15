@@ -11,6 +11,9 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
 use App\Http\Middleware\AdminGuard;
+use App\Http\Middleware\PreventAdminAccessUser;
+use App\Http\Middleware\PreventUserAccessAdmin;
+
 // Welcome Route
 Route::get('/', function () {
     return view('welcome');
@@ -20,7 +23,7 @@ Route::get('/', function () {
 Auth::routes();
 
 // Authenticated User Routes
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', PreventAdminAccessUser::class])->group(function () {
     // Home Routes
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/calendar', [HomeController::class, 'calendar'])->name('calendar');
@@ -50,11 +53,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-
-
 Route::prefix('admin')->group(function () {
     // Admin Guest Routes (Only accessible if NOT logged in as admin)
-    Route::middleware('guest:admin')->group(function () {
+    Route::middleware(['guest:admin', PreventUserAccessAdmin::class])->group(function () {
         Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
         Route::post('/', [AdminLoginController::class, 'login']);
     });
