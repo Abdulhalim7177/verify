@@ -14,13 +14,53 @@
                         </div>
                     @endif
 
-                    <div class="text-center mb-4">
-                        <h4>Position the QR code in front of your camera</h4>
-                    </div>
+                    <ul class="nav nav-tabs mb-4" id="scanMethodTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="camera-tab" data-bs-toggle="tab" data-bs-target="#camera-tab-pane" type="button" role="tab" aria-controls="camera-tab-pane" aria-selected="true">
+                                <i class="fas fa-camera me-1"></i> Camera Scan
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-tab-pane" type="button" role="tab" aria-controls="upload-tab-pane" aria-selected="false">
+                                <i class="fas fa-upload me-1"></i> Upload Image
+                            </button>
+                        </li>
+                    </ul>
 
-                    <div class="row">
-                        <div class="col-md-12 mb-4">
-                            <div id="reader" class="mx-auto" style="width: 500px; max-width: 100%; border-radius: 10px; overflow: hidden;"></div>
+                    <div class="tab-content" id="scanMethodTabsContent">
+                        <!-- Camera Scan Tab -->
+                        <div class="tab-pane fade show active" id="camera-tab-pane" role="tabpanel" aria-labelledby="camera-tab" tabindex="0">
+                            <div class="text-center mb-4">
+                                <h4>Position the QR code in front of your camera</h4>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <div id="reader" class="mx-auto" style="width: 500px; max-width: 100%; border-radius: 10px; overflow: hidden;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Image Tab -->
+                        <div class="tab-pane fade" id="upload-tab-pane" role="tabpanel" aria-labelledby="upload-tab" tabindex="0">
+                            <div class="text-center mb-4">
+                                <h4>Upload an image with a QR code</h4>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <form id="upload-form" enctype="multipart/form-data">
+                                        <div class="mb-3">
+                                            <label for="qr-image" class="form-label">QR Code Image</label>
+                                            <input class="form-control" type="file" id="qr-image" accept="image/*" required>
+                                            <div class="form-text">Upload an image containing a QR code (.jpg, .png, .gif, etc.)</div>
+                                        </div>
+                                        <div class="d-grid gap-2 col-6 mx-auto">
+                                            <button type="submit" class="btn btn-primary">Scan Uploaded Image</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -91,21 +131,103 @@
 <script src="https://unpkg.com/html5-qrcode@2.3.4/html5-qrcode.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const html5QrCode = new Html5Qrcode("reader");
-        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
-            // Stop scanning
-            html5QrCode.stop().then(() => {
-                console.log("QR Code scanning stopped.");
-                processQrCodeData(decodedText);
-            }).catch((err) => {
-                console.error("Failed to stop QR Code scanner:", err);
-            });
-        };
-        
+        // Initialize variables
+        let html5QrCode = null;
         const config = { fps: 10, qrbox: { width: 250, height: 250 } };
         
-        // Start scanning
-        html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback);
+        // Initialize camera scanner
+        function initializeScanner() {
+            if (html5QrCode === null) {
+                html5QrCode = new Html5Qrcode("reader");
+            }
+            
+            // Start scanning with camera
+            html5QrCode.start(
+                { facingMode: "environment" },
+                config,
+                qrCodeSuccessCallback
+            ).catch(error => {
+                console.error("Unable to start scanner", error);
+                alert("Unable to start the camera scanner. Please check your camera permissions or try the 'Upload Image' option.");
+            });
+        }
+        
+        // Initialize scanner when the camera tab is shown
+        initializeScanner();
+        
+        // Handle tab changes
+        document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(tab => {
+            tab.addEventListener('shown.bs.tab', function (event) {
+                if (event.target.id === 'camera-tab') {
+                    initializeScanner();
+                } else if (event.target.id === 'upload-tab') {
+                    // Stop scanner when switching to upload tab
+                    if (html5QrCode !== null && html5QrCode.isScanning) {
+                        html5QrCode.stop().catch(error => {
+                            console.error("Unable to stop scanner", error);
+                        });
+                    }
+                }
+            });
+        });
+        
+        // QR Code success callback
+        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            // Stop scanning
+            if (html5QrCode !== null && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    console.log("QR Code scanning stopped.");
+                    processQrCodeData(decodedText);
+                }).catch((err) => {
+                    console.error("Failed to stop QR Code scanner:", err);
+                });
+            } else {
+                processQrCodeData(decodedText);
+            }
+        };
+        
+        // Handle image upload form submission
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('qr-image');
+            if (fileInput.files && fileInput.files[0]) {
+                const imageFile = fileInput.files[0];
+                
+                // Create a file reader
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Create a canvas and draw the image
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        context.drawImage(img, 0, 0, img.width, img.height);
+                        
+                        // Get image data for QR scanning
+                        const imageData = canvas.toDataURL('image/jpeg');
+                        
+                        // Use HTML5 QR Code library to scan the image
+                        if (html5QrCode === null) {
+                            html5QrCode = new Html5Qrcode("reader");
+                        }
+                        
+                        html5QrCode.scanFile(imageFile, true)
+                            .then(decodedText => {
+                                processQrCodeData(decodedText);
+                            })
+                            .catch(error => {
+                                console.error("Error scanning file:", error);
+                                displayError("Could not detect a valid QR code in the uploaded image. Please try another image or use camera scanning.");
+                            });
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(imageFile);
+            }
+        });
         
         // Process QR code data
         function processQrCodeData(qrCodeData) {
@@ -248,15 +370,24 @@
         
         // Scan again button
         document.getElementById('scan-again').addEventListener('click', function() {
-            // Hide result and restart scanner
+            // Hide result
             document.getElementById('scan-result').classList.add('d-none');
             
-            // Start scanning again
-            html5QrCode.start(
-                { facingMode: "environment" },
-                config,
-                qrCodeSuccessCallback
-            );
+            // Reset file input
+            const fileInput = document.getElementById('qr-image');
+            if (fileInput) {
+                fileInput.value = '';
+            }
+            
+            // Check which tab is active and restart scanning if camera tab
+            const activeCameraTab = document.getElementById('camera-tab').classList.contains('active');
+            if (activeCameraTab) {
+                // Start scanning again with camera
+                initializeScanner();
+            } else {
+                // Switch back to camera tab
+                bootstrap.Tab.getOrCreateInstance(document.getElementById('camera-tab')).show();
+            }
         });
     });
 </script>

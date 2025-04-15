@@ -95,6 +95,7 @@ Route::prefix('security')->group(function () {
             Route::get('/', [ScanController::class, 'index'])->name('security.scan');
             Route::post('/process', [ScanController::class, 'processQrCode'])->name('security.scan.process');
             Route::get('/result', [ScanController::class, 'showResult'])->name('security.scan.result');
+            Route::get('/history', [ScanController::class, 'history'])->name('security.scan.history');
         });
 
         Route::post('/verify', fn() => back()->with('success', 'Verification successful'))->name('security.verify');

@@ -32,7 +32,7 @@ class ScanController extends Controller
     }
 
     /**
-     * Process the QR code data.
+     * Process the QR code data from camera or uploaded image.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
@@ -40,7 +40,22 @@ class ScanController extends Controller
     public function processQrCode(Request $request)
     {
         try {
-            $qrData = json_decode($request->input('qr_data'), true);
+            // Get QR data from request (handle both JSON and form data)
+            $qrData = null;
+            
+            if ($request->has('qr_data')) {
+                // Parse from JSON if string or directly use if array
+                $rawData = $request->input('qr_data');
+                $qrData = is_string($rawData) ? json_decode($rawData, true) : $rawData;
+            } elseif ($request->hasFile('qr_image')) {
+                // Process uploaded image
+                // Note: This would require a QR code reading library on the server
+                // This is just a placeholder - you would need to implement this part
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Server-side QR image processing not implemented',
+                ], 501);
+            }
             
             if (!$qrData || !isset($qrData['type']) || !isset($qrData['id'])) {
                 return response()->json([
@@ -125,6 +140,7 @@ class ScanController extends Controller
             'details' => [
                 'resident_name' => $user->name,
                 'resident_email' => $user->email,
+                'scan_method' => 'manual_upload', // Track scan method
             ],
             'scanned_at' => now(),
         ]);
@@ -187,11 +203,6 @@ class ScanController extends Controller
         }
 
         // Get the host information
-        $host = User::find($invitation->host_id);
-
-        // Continuing from the processInvitationQrCode method
-
-        // Get the host information
         $host = User::find($invitation->user_id);
         $hostName = $host ? $host->name : 'Unknown Host';
 
@@ -213,6 +224,7 @@ class ScanController extends Controller
                 'is_valid' => $isValid,
                 'is_used' => $alreadyUsed,
                 'used_at' => $invitation->used_at ? $invitation->used_at->format('Y-m-d H:i:s') : null,
+                'scan_method' => 'manual_upload', // Track scan method
             ],
             'scanned_at' => now(),
         ]);

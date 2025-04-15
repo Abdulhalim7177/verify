@@ -15,16 +15,34 @@
                     @endif
 
                     <h4>Welcome, {{ Auth::guard('security')->user()->name }}</h4>
-                    <p>You are logged in as a security personnel!</p>
-                    
-                    <div class="mt-4">
-                        <div class="list-group">
-                            <a href="{{ route('security.scan') }}" class="list-group-item list-group-item-action">
-                                Scan QR Code
-                            </a>
-                            <!-- Add more security-specific actions here -->
+                    <p class="text-muted">Security Guard Dashboard</p>
+
+                    <div class="row mt-4">
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Scan QR Codes</h5>
+                                    <p class="card-text">Scan resident and visitor QR codes to verify their identity and permissions.</p>
+                                    <a href="{{ route('security.scan') }}" class="btn btn-primary">
+                                        <i class="fas fa-qrcode me-2"></i> Scan QR Code
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Scan History</h5>
+                                    <p class="card-text">View your recent scans and verification history.</p>
+                                    <a href="{{ route('security.scan.history') }}" class="btn btn-secondary">
+                                        <i class="fas fa-history me-2"></i> View History
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Add more security features here as needed -->
                 </div>
             </div>
         </div>
