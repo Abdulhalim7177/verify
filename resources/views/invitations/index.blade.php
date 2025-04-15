@@ -22,9 +22,8 @@
                         <thead>
                             <tr>
                                 <th>{{ __('Guest Name') }}</th>
-                                <th>{{ __('Guest Phone') }}</th>
-                                <th>{{ __('Date') }}</th>
-                                <th>{{ __('Time') }}</th>
+                                <th>{{ __('Description') }}</th>
+                                <th>{{ __('Expire At') }}</th>
                                 <th>{{ __('Status') }}</th>
                                 <th>{{ __('Actions') }}</th>
                             </tr>
@@ -33,9 +32,8 @@
                             @foreach ($invitations->where('status', 'active') as $invitation)
                                 <tr>
                                     <td>{{ $invitation->guest_name }}</td>
-                                    <td>{{ $invitation->guest_phone }}</td>
-                                    <td>{{ $invitation->date }}</td>
-                                    <td>{{ $invitation->time }}</td>
+                                    <td>{{ $invitation->description }}</td>
+                                    <td>{{ $invitation->expire_at }}</td>
                                     <td>{{ ucfirst($invitation->status) }}</td>
                                     <td>
                                         <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>
@@ -56,9 +54,8 @@
                         <thead>
                             <tr>
                                 <th>{{ __('Guest Name') }}</th>
-                                <th>{{ __('Guest Phone') }}</th>
-                                <th>{{ __('Date') }}</th>
-                                <th>{{ __('Time') }}</th>
+                                <th>{{ __('Description') }}</th>
+                                <th>{{ __('Expire At') }}</th>
                                 <th>{{ __('Status') }}</th>
                                 <th>{{ __('Actions') }}</th>
                             </tr>
@@ -67,9 +64,8 @@
                             @foreach ($invitations->where('status', 'inactive') as $invitation)
                                 <tr>
                                     <td>{{ $invitation->guest_name }}</td>
-                                    <td>{{ $invitation->guest_phone }}</td>
-                                    <td>{{ $invitation->date }}</td>
-                                    <td>{{ $invitation->time }}</td>
+                                    <td>{{ $invitation->description }}</td>
+                                    <td>{{ $invitation->expire_at }}</td>
                                     <td>{{ ucfirst($invitation->status) }}</td>
                                     <td>
                                         <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>

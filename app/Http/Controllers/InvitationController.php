@@ -8,20 +8,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class InvitationController extends Controller
 {
     // Show all invitations for the authenticated user
     public function index()
     {
-        // $now = Carbon::now();
-
-        // // Update expired invitations
-        // Invitation::where('status', 'active')
-        //     ->whereRaw("STR_TO_DATE(CONCAT(date, ' ', time), '%Y-%m-%d %H:%i:%s') < ?", [$now])
-        //     ->update(['status' => 'inactive']);
-
-        // Get the updated invitations for the authenticated user
         $invitations = Auth::user()->invitations;
 
         return view('invitations.index', compact('invitations'));
@@ -39,45 +32,36 @@ class InvitationController extends Controller
         // Validate the request
         $request->validate([
             'guest_name' => 'required|string|max:255',
-            'guest_phone' => 'required|string|max:20',
             'description' => 'required|string',
-            'date' => 'required|date|after_or_equal:today',
-            'time' => 'required',
+            'expire_at' => 'required|date|after_or_equal:now',
             'status' => 'required|in:active,inactive',
         ]);
-        // Check if the date and time are not in the past
-        $dateTime = Carbon::parse($request->date . ' ' . $request->time);
-        if ($dateTime->isPast()) {
-            return redirect()->back()->withErrors(['date' => 'The date and time must be in the future.'])->withInput();
-        }
 
         // Get the authenticated user
         $user = Auth::user();
+
+        // Generate a random 100-character token
+        $qrcodetoken = Str::random(100);
 
         // Create the invitation
         $invitation = Invitation::create([
             'user_id' => $user->id,
             'guest_name' => $request->guest_name,
-            'guest_phone' => $request->guest_phone,
             'description' => $request->description,
-            'date' => $request->date,
-            'time' => $request->time,
+            'expire_at' => $request->expire_at,
             'status' => $request->status,
+            'qrcodetoken' => $qrcodetoken,
         ]);
 
         // Generate QR code content as JSON
         $qrContent = json_encode([
             'host_name' => $user->name,
             'host_email' => $user->email,
-            'host_phone' => $user->phone,
-            'host_altphone' => $user->altphone,
-            'host_address' => $user->address,
             'guest_name' => $invitation->guest_name,
-            'guest_phone' => $invitation->guest_phone,
             'description' => $invitation->description,
-            'date' => $invitation->date,
-            'time' => $invitation->time,
+            'expire_at' => $invitation->expire_at,
             'status' => $invitation->status,
+            'qrcodetoken' => $invitation->qrcodetoken,
         ]);
 
         // Generate QR code image in SVG format
@@ -112,18 +96,10 @@ class InvitationController extends Controller
         // Validate the request
         $request->validate([
             'guest_name' => 'required|string|max:255',
-            'guest_phone' => 'required|string|max:20',
             'description' => 'required|string',
-            'date' => 'required|date|after_or_equal:today',
-            'time' => 'required',
+            'expire_at' => 'required|date|after_or_equal:now',
             'status' => 'required|in:active,inactive',
         ]);
-
-        // Check if the date and time are not in the past
-        $dateTime = Carbon::parse($request->date . ' ' . $request->time);
-        if ($dateTime->isPast()) {
-            return redirect()->back()->withErrors(['date' => 'The date and time must be in the future.']);
-        }
 
         // Find the invitation
         $invitation = Invitation::findOrFail($id);
@@ -131,10 +107,8 @@ class InvitationController extends Controller
         // Update the invitation
         $invitation->update([
             'guest_name' => $request->guest_name,
-            'guest_phone' => $request->guest_phone,
             'description' => $request->description,
-            'date' => $request->date,
-            'time' => $request->time,
+            'expire_at' => $request->expire_at,
             'status' => $request->status,
         ]);
 

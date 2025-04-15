@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Link to the user who created the invitation
             $table->string('guest_name');
-            $table->string('guest_phone');
-            $table->text('description');
-            $table->date('date');
-            $table->time('time');
+            $table->time('expire_at');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->string('qrcode')->nullable(); // To store the QR code path
+            $table->string('description')->nullable(); // To store description
+            $table->string('qrcodetoken')->nullable(); // To store the QR code token
             $table->timestamps();
         });
     }

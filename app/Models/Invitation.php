@@ -12,12 +12,11 @@ class Invitation extends Model
     protected $fillable = [
         'user_id',
         'guest_name',
-        'guest_phone',
         'description',
-        'date',
-        'time',
+        'expire_at',
         'status',
         'qrcode',
+        'qrcodetoken',
     ];
 
     // Relationship to the user who created the invitation
