@@ -17,6 +17,9 @@ class InvitationController extends Controller
      */
     public function index(Request $request)
     {
+        // First update any expired invitations
+        $this->updateExpiredInvitations();
+        
         $query = Invitation::with('user')->latest();
         
         // Apply filters
@@ -30,7 +33,7 @@ class InvitationController extends Controller
         
         if ($request->filled('date_range')) {
             [$start, $end] = explode(' - ', $request->date_range);
-            $query->whereBetween('date', [
+            $query->whereBetween('created_at', [
                 Carbon::parse($start)->startOfDay(),
                 Carbon::parse($end)->endOfDay()
             ]);
@@ -39,16 +42,33 @@ class InvitationController extends Controller
         $invitations = $query->paginate(10);
         $users = User::all(); // For user filter dropdown
         
-        // Analytics data
+        // Improved analytics data
+        $now = Carbon::now();
         $analytics = [
             'total' => Invitation::count(),
             'active' => Invitation::where('status', 'active')->count(),
-            'inactive' => Invitation::where('status', 'inactive')->count(),
-            'today' => Invitation::whereDate('date', today())->count(),
-            'upcoming' => Invitation::where('date', '>', now())->count()
+            'expired' => Invitation::where('status', 'inactive')
+                                ->where('expire_at', '<', $now)
+                                ->count(),
+            'upcoming' => Invitation::where('status', 'active')
+                                  ->where('expire_at', '>', $now)
+                                  ->count(),
+            'today' => Invitation::whereDate('created_at', today())->count()
         ];
 
         return view('admin.invitations.index', compact('invitations', 'users', 'analytics'));
+    }
+
+    /**
+     * Update expired invitations
+     */
+    private function updateExpiredInvitations()
+    {
+        $now = Carbon::now();
+        
+        Invitation::where('status', 'active')
+                 ->where('expire_at', '<', $now)
+                 ->update(['status' => 'inactive']);
     }
 
     /**
@@ -65,12 +85,15 @@ class InvitationController extends Controller
     public function update(Request $request, Invitation $invitation)
     {
         $validated = $request->validate([
-            'status' => 'required|in:active,inactive'
+            'status' => 'required|in:active,inactive',
+            'guest_name' => 'sometimes|required|string|max:255',
+            'description' => 'sometimes|required|string',
+            'expire_at' => 'sometimes|required|date|after_or_equal:now'
         ]);
 
         $invitation->update($validated);
 
-        return back()->with('success', 'Invitation status updated!');
+        return back()->with('success', 'Invitation updated successfully!');
     }
 
     /**
@@ -98,12 +121,19 @@ class InvitationController extends Controller
             'host_name' => $invitation->user->name,
             'host_email' => $invitation->user->email,
             'guest_name' => $invitation->guest_name,
-            'date' => $invitation->date,
-            'time' => $invitation->time
+            'description' => $invitation->description,
+            'expire_at' => $invitation->expire_at,
+            'status' => $invitation->status,
+            'token' => $invitation->qrcodetoken ?? Str::random(100)
         ]);
 
         $fileName = 'invitations/' . $invitation->id . '_qrcode.svg';
         $qrCodeImage = QrCode::format('svg')->size(200)->generate($qrContent);
+        
+        // Delete old QR code if exists
+        if ($invitation->qrcode && Storage::exists('public/' . $invitation->qrcode)) {
+            Storage::delete('public/' . $invitation->qrcode);
+        }
         
         Storage::disk('public')->put($fileName, $qrCodeImage);
         $invitation->update(['qrcode' => $fileName]);
