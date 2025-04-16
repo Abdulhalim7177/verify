@@ -173,6 +173,9 @@
                                             <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-outline-secondary rounded-2 px-3">
                                                 <i class="fas fa-edit"></i>
                                             </a>
+                                            <button type="button" class="btn btn-sm btn-outline-info rounded-2 px-3" data-bs-toggle="modal" data-bs-target="#viewInvitationModal{{ $invitation->id }}">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
                                             <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
@@ -184,6 +187,27 @@
                                         </div>
                                     </td>
                                 </tr>
+
+                                <!-- View Invitation Modal -->
+                                <div class="modal fade" id="viewInvitationModal{{ $invitation->id }}" tabindex="-1" aria-labelledby="viewInvitationModalLabel{{ $invitation->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="viewInvitationModalLabel{{ $invitation->id }}">{{ __('Invitation Details') }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><strong>{{ __('Guest Name:') }}</strong> {{ $invitation->guest_name }}</p>
+                                                <p><strong>{{ __('Description:') }}</strong> {{ $invitation->description }}</p>
+                                                <p><strong>{{ __('Expire At:') }}</strong> {{ $expireDate->format('M d, Y - H:i') }}</p>
+                                                <p><strong>{{ __('Created At:') }}</strong> {{ $invitation->created_at->format('M d, Y - H:i') }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endif
                         @endforeach
                         
