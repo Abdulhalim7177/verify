@@ -17,67 +17,112 @@
                         </div>
                     @endif
 
+                    <!-- Active Invitations -->
                     <h4>{{ __('Active Invitations') }}</h4>
-                    <table class="table table-bordered">
+                    <table class="table table-bordered mb-5">
                         <thead>
                             <tr>
                                 <th>{{ __('Guest Name') }}</th>
                                 <th>{{ __('Description') }}</th>
                                 <th>{{ __('Expire At') }}</th>
-                                <th>{{ __('Status') }}</th>
                                 <th>{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($invitations->where('status', 'active') as $invitation)
-                                <tr>
-                                    <td>{{ $invitation->guest_name }}</td>
-                                    <td>{{ $invitation->description }}</td>
-                                    <td>{{ $invitation->expire_at }}</td>
-                                    <td>{{ ucfirst($invitation->status) }}</td>
-                                    <td>
-                                        <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>
-                                        <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this invitation?')">{{ __('Delete') }}</button>
-                                        </form>
-                                        <a href="{{ route('invitations.share', $invitation->id) }}" class="btn btn-sm btn-info">{{ __('Share') }}</a>
-                                    </td>
-                                </tr>
+                            @php
+                                $hasActiveInvitations = false;
+                            @endphp
+                            @foreach ($invitations as $invitation)
+                                @php
+                                    $expireDate = \Carbon\Carbon::parse($invitation->expire_at);
+                                    $now = \Carbon\Carbon::now();
+                                    $diff = $now->diffInMinutes($expireDate, false);
+                                    $isExpired = $now->gt($expireDate);
+                                @endphp
+                                @if(!$isExpired)
+                                    @php
+                                        $hasActiveInvitations = true;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $invitation->guest_name }}</td>
+                                        <td>{{ $invitation->description }}</td>
+                                        <td>
+                                            {{ $invitation->expire_at }}
+                                            @if($diff <= 20 && $diff > 0)
+                                                <span class="badge badge-warning">Expires soon</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>
+                                            <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this invitation?')">{{ __('Delete') }}</button>
+                                            </form>
+                                            <a href="{{ route('invitations.share', $invitation->id) }}" class="btn btn-sm btn-info">{{ __('Share') }}</a>
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
+                            
+                            @if(!$hasActiveInvitations)
+                                <tr>
+                                    <td colspan="4" class="text-center">{{ __('No active invitations found') }}</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
 
-                    <h4>{{ __('Inactive Invitations') }}</h4>
+                    <!-- Expired Invitations -->
+                    <h4>{{ __('Expired Invitations') }}</h4>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>{{ __('Guest Name') }}</th>
                                 <th>{{ __('Description') }}</th>
                                 <th>{{ __('Expire At') }}</th>
-                                <th>{{ __('Status') }}</th>
                                 <th>{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($invitations->where('status', 'inactive') as $invitation)
-                                <tr>
-                                    <td>{{ $invitation->guest_name }}</td>
-                                    <td>{{ $invitation->description }}</td>
-                                    <td>{{ $invitation->expire_at }}</td>
-                                    <td>{{ ucfirst($invitation->status) }}</td>
-                                    <td>
-                                        <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>
-                                        <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this invitation?')">{{ __('Delete') }}</button>
-                                        </form>
-                                        <a href="{{ route('invitations.share', $invitation->id) }}" class="btn btn-sm btn-info">{{ __('Share') }}</a>
-                                    </td>
-                                </tr>
+                            @php
+                                $hasExpiredInvitations = false;
+                            @endphp
+                            @foreach ($invitations as $invitation)
+                                @php
+                                    $expireDate = \Carbon\Carbon::parse($invitation->expire_at);
+                                    $now = \Carbon\Carbon::now();
+                                    $isExpired = $now->gt($expireDate);
+                                @endphp
+                                @if($isExpired)
+                                    @php
+                                        $hasExpiredInvitations = true;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $invitation->guest_name }}</td>
+                                        <td>{{ $invitation->description }}</td>
+                                        <td>
+                                            {{ $invitation->expire_at }}
+                                            <span class="badge badge-danger">Expired</span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>
+                                            <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" style="display: inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this invitation?')">{{ __('Delete') }}</button>
+                                            </form>
+                                            <!-- Share button removed for expired invitations -->
+                                        </td>
+                                    </tr>
+                                @endif
                             @endforeach
+                            
+                            @if(!$hasExpiredInvitations)
+                                <tr>
+                                    <td colspan="4" class="text-center">{{ __('No expired invitations found') }}</td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>

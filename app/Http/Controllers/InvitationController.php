@@ -15,9 +15,26 @@ class InvitationController extends Controller
     // Show all invitations for the authenticated user
     public function index()
     {
+        // First, update expired invitations
+        $this->updateExpiredInvitations();
+        
+        // Then fetch the updated invitations
         $invitations = Auth::user()->invitations;
 
         return view('invitations.index', compact('invitations'));
+    }
+
+    // Update expired invitations
+    private function updateExpiredInvitations()
+    {
+        // Get current time
+        $now = Carbon::now();
+        
+        // Find active invitations that have expired and update them to inactive
+        $expiredInvitations = Invitation::where('user_id', Auth::id())
+            ->where('status', 'active')
+            ->where('expire_at', '<', $now)
+            ->update(['status' => 'inactive']);
     }
 
     // Show the invitation creation form
@@ -140,6 +157,9 @@ class InvitationController extends Controller
     // Share the invitation
     public function share($id)
     {
+        // Update expired invitations before sharing
+        $this->updateExpiredInvitations();
+        
         $invitation = Invitation::findOrFail($id);
         return view('invitations.share', compact('invitation'));
     }
