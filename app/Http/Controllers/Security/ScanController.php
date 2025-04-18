@@ -7,56 +7,32 @@ use App\Models\Invitation;
 use App\Models\ScanLog;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class ScanController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('auth:security');
     }
 
-    /**
-     * Show the QR code scanning interface.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    // Show the QR code scanning interface
     public function index()
     {
         return view('security.scan.index');
     }
 
-    /**
-     * Process the QR code data from camera or uploaded image.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
-     */
+    // Process the QR code data
     public function processQrCode(Request $request)
     {
         try {
-            // Get QR data from request (handle both JSON and form data)
-            $qrData = null;
-            
-            if ($request->has('qr_data')) {
-                // Parse from JSON if string or directly use if array
-                $rawData = $request->input('qr_data');
-                $qrData = is_string($rawData) ? json_decode($rawData, true) : $rawData;
-            } elseif ($request->hasFile('qr_image')) {
-                // Process uploaded image
-                // Note: This would require a QR code reading library on the server
-                // This is just a placeholder - you would need to implement this part
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Server-side QR image processing not implemented',
-                ], 501);
-            }
-            
+            $qrData = $this->extractQrData($request);
+
             if (!$qrData || !isset($qrData['type']) || !isset($qrData['id'])) {
                 return response()->json([
                     'status' => 'error',
@@ -64,7 +40,6 @@ class ScanController extends Controller
                 ], 400);
             }
 
-            // Process based on QR code type
             if ($qrData['type'] === 'resident') {
                 return $this->processResidentQrCode($qrData);
             } elseif ($qrData['type'] === 'invitation') {
@@ -77,236 +52,85 @@ class ScanController extends Controller
             }
         } catch (\Exception $e) {
             Log::error('QR Code Processing Error: ' . $e->getMessage());
-            
-            // Log the error in the scan logs
-            ScanLog::create([
-                'scanner_type' => 'security',
-                'scanner_id' => auth()->guard('security')->id(),
-                'qr_type' => 'error',
-                'qr_id' => 0,
-                'status' => 'error',
-                'details' => [
-                    'error_message' => $e->getMessage(),
-                    'qr_data' => $request->input('qr_data'),
-                ],
-                'scanned_at' => now(),
-            ]);
-            
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed to process QR code: ' . $e->getMessage(),
+                'message' => 'Failed to process QR code',
             ], 500);
         }
     }
 
-    /**
-     * Process resident QR code.
-     *
-     * @param  array  $qrData
-     * @return \Illuminate\Http\JsonResponse
-     */
+    // Extract QR data from request
+    private function extractQrData(Request $request)
+    {
+        if ($request->has('qr_data')) {
+            $rawData = $request->input('qr_data');
+            return is_string($rawData) ? json_decode($rawData, true) : $rawData;
+        } elseif ($request->hasFile('qr_image')) {
+            // Placeholder for QR image processing
+            return null;
+        }
+        return null;
+    }
+
+    // Process resident QR code
     private function processResidentQrCode($qrData)
     {
-        $userId = $qrData['id'];
-        $user = User::find($userId);
-
+        $user = User::find($qrData['id']);
         if (!$user) {
-            // Log the failed scan
-            ScanLog::create([
-                'scanner_type' => 'security',
-                'scanner_id' => auth()->guard('security')->id(),
-                'qr_type' => 'resident',
-                'qr_id' => $userId,
-                'status' => 'error',
-                'details' => [
-                    'error_message' => 'Resident not found',
-                ],
-                'scanned_at' => now(),
-            ]);
-            
             return response()->json([
                 'status' => 'error',
                 'message' => 'Resident not found',
             ], 404);
         }
 
-        // Log the successful scan
-        ScanLog::create([
-            'scanner_type' => 'security',
-            'scanner_id' => auth()->guard('security')->id(),
-            'qr_type' => 'resident',
-            'qr_id' => $user->id,
-            'status' => 'success',
-            'details' => [
-                'resident_name' => $user->name,
-                'resident_email' => $user->email,
-                'scan_method' => 'manual_upload', // Track scan method
-            ],
-            'scanned_at' => now(),
-        ]);
-
         return response()->json([
             'status' => 'success',
             'message' => 'Resident verified successfully',
             'data' => [
-                'type' => 'resident',
                 'name' => $user->name,
                 'email' => $user->email,
-                'status' => 'Valid Resident',
-                'timestamp' => now()->format('Y-m-d H:i:s'),
             ],
         ]);
     }
 
-    /**
-     * Process invitation QR code.
-     *
-     * @param  array  $qrData
-     * @return \Illuminate\Http\JsonResponse
-     */
+    // Process invitation QR code
     private function processInvitationQrCode($qrData)
     {
-        $invitationId = $qrData['id'];
-        $invitation = Invitation::find($invitationId);
-
+        $invitation = Invitation::find($qrData['id']);
         if (!$invitation) {
-            // Log the failed scan
-            ScanLog::create([
-                'scanner_type' => 'security',
-                'scanner_id' => auth()->guard('security')->id(),
-                'qr_type' => 'invitation',
-                'qr_id' => $invitationId,
-                'status' => 'error',
-                'details' => [
-                    'error_message' => 'Invitation not found',
-                ],
-                'scanned_at' => now(),
-            ]);
-            
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invitation not found',
             ], 404);
         }
 
-        // Check if invitation is valid (not expired)
-        $isValid = now()->lt($invitation->event_date) || 
-                  (now()->format('Y-m-d') === $invitation->event_date->format('Y-m-d'));
-        
-        // Check if invitation has been used already
-        $alreadyUsed = $invitation->used_at !== null;
-
-        // If valid and not used, mark as used
-        if ($isValid && !$alreadyUsed) {
-            $invitation->used_at = now();
-            $invitation->save();
+        $isValid = Carbon::now()->lt($invitation->expire_at);
+        if (!$isValid) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invitation has expired',
+            ], 400);
         }
-
-        // Get the host information
-        $host = User::find($invitation->user_id);
-        $hostName = $host ? $host->name : 'Unknown Host';
-
-        // Determine status for logging
-        $scanStatus = $isValid ? ($alreadyUsed ? 'warning' : 'success') : 'error';
-
-        // Log the scan
-        ScanLog::create([
-            'scanner_type' => 'security',
-            'scanner_id' => auth()->guard('security')->id(),
-            'qr_type' => 'invitation',
-            'qr_id' => $invitation->id,
-            'status' => $scanStatus,
-            'details' => [
-                'guest_name' => $invitation->guest_name,
-                'host_id' => $invitation->user_id,
-                'host_name' => $hostName,
-                'event_date' => $invitation->event_date->format('Y-m-d'),
-                'is_valid' => $isValid,
-                'is_used' => $alreadyUsed,
-                'used_at' => $invitation->used_at ? $invitation->used_at->format('Y-m-d H:i:s') : null,
-                'scan_method' => 'manual_upload', // Track scan method
-            ],
-            'scanned_at' => now(),
-        ]);
 
         return response()->json([
-            'status' => $scanStatus,
-            'message' => $this->getInvitationStatusMessage($isValid, $alreadyUsed),
+            'status' => 'success',
+            'message' => 'Invitation verified successfully',
             'data' => [
-                'type' => 'invitation',
                 'guest_name' => $invitation->guest_name,
-                'host_name' => $hostName,
-                'event_date' => $invitation->event_date->format('Y-m-d'),
-                'event_time' => $invitation->event_time ?? 'Any time',
-                'status' => $this->getInvitationStatus($isValid, $alreadyUsed),
-                'used_at' => $invitation->used_at ? $invitation->used_at->format('Y-m-d H:i:s') : null,
-                'timestamp' => now()->format('Y-m-d H:i:s'),
+                'description' => $invitation->description,
+                'expire_at' => $invitation->expire_at,
             ],
         ]);
     }
 
-    /**
-     * Get invitation status message.
-     *
-     * @param  bool  $isValid
-     * @param  bool  $alreadyUsed
-     * @return string
-     */
-    private function getInvitationStatusMessage($isValid, $alreadyUsed)
-    {
-        if (!$isValid) {
-            return 'Invitation has expired';
-        }
-        
-        if ($alreadyUsed) {
-            return 'Invitation already used';
-        }
-        
-        return 'Invitation verified successfully';
-    }
-
-    /**
-     * Get invitation status.
-     *
-     * @param  bool  $isValid
-     * @param  bool  $alreadyUsed
-     * @return string
-     */
-    private function getInvitationStatus($isValid, $alreadyUsed)
-    {
-        if (!$isValid) {
-            return 'Expired';
-        }
-        
-        if ($alreadyUsed) {
-            return 'Already Used';
-        }
-        
-        return 'Valid';
-    }
-
-    /**
-     * Show scan result page.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function showResult()
-    {
-        return view('security.scan.result');
-    }
-
-    /**
-     * Show scan history for the security guard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    // Show scan history
     public function history()
     {
         $scans = ScanLog::where('scanner_type', 'security')
-                        ->where('scanner_id', auth()->guard('security')->id())
-                        ->orderBy('scanned_at', 'desc')
-                        ->paginate(15);
-        
+            ->where('scanner_id', Auth::id())
+            ->orderBy('scanned_at', 'desc')
+            ->paginate(15);
+
         return view('security.scan.history', compact('scans'));
     }
 }

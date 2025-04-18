@@ -2,51 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\ScanLog;
 use App\Models\Invitation;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 
 class InvitationController extends Controller
 {
-    // Show all invitations for the authenticated user
     public function index()
     {
-        // First, update expired invitations
         $this->updateExpiredInvitations();
-        
-        // Then fetch the updated invitations
         $invitations = Auth::user()->invitations;
-
         return view('invitations.index', compact('invitations'));
     }
 
-    // Update expired invitations
     private function updateExpiredInvitations()
     {
-        // Get current time
         $now = Carbon::now();
-        
-        // Find active invitations that have expired and update them to inactive
-        $expiredInvitations = Invitation::where('user_id', Auth::id())
+        Invitation::where('user_id', Auth::id())
             ->where('status', 'active')
             ->where('expire_at', '<', $now)
             ->update(['status' => 'inactive']);
     }
 
-    // Show the invitation creation form
     public function create()
     {
         return view('invitations.create');
     }
 
-    // Store the invitation and generate QR code
     public function store(Request $request)
     {
-        // Validate the request
         $request->validate([
             'guest_name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -54,13 +43,9 @@ class InvitationController extends Controller
             'status' => 'required|in:active,inactive',
         ]);
 
-        // Get the authenticated user
         $user = Auth::user();
-
-        // Generate a random 100-character token
         $qrcodetoken = Str::random(100);
 
-        // Create the invitation
         $invitation = Invitation::create([
             'user_id' => $user->id,
             'guest_name' => $request->guest_name,
@@ -70,47 +55,78 @@ class InvitationController extends Controller
             'qrcodetoken' => $qrcodetoken,
         ]);
 
-        // Generate QR code content as JSON
-        $qrContent = json_encode([
-            'host_name' => $user->name,
-            'host_email' => $user->email,
-            'guest_name' => $invitation->guest_name,
-            'description' => $invitation->description,
-            'expire_at' => $invitation->expire_at,
-            'status' => $invitation->status,
-            'qrcodetoken' => $invitation->qrcodetoken,
-        ]);
-
-        // Generate QR code image in SVG format
-        $qrCodeImage = QrCode::format('svg')->size(200)->generate($qrContent);
-
-        // Define file name with invitation ID
+        $validationLink = route('invitations.validate', $qrcodetoken);
+        $qrCodeImage = QrCode::format('svg')->size(200)->generate($validationLink);
         $fileName = 'invitations/' . $invitation->id . '_qrcode.svg';
-
-        // Save QR code image to public storage
         Storage::disk('public')->put($fileName, $qrCodeImage);
 
-        // Save QR code path to the invitation record
         $invitation->qrcode = $fileName;
         $invitation->save();
 
-        // Redirect back with success message
-        return redirect()->route('invitations.index')->with([
-            'status' => 'Invitation created and QR code generated successfully!',
+        return redirect()->route('invitations.index')->with('success', 'Invitation created successfully!');
+    }
+
+    public function validateInvitation($token)
+    {
+        $invitation = Invitation::where('qrcodetoken', $token)->firstOrFail();
+        $now = Carbon::now();
+    
+        // Create scan log data
+        $logData = [
+            'invitation_id' => $invitation->id,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ];
+    
+        if ($invitation->expire_at < $now) {
+            $invitation->status = 'inactive';
+            $invitation->save();
+            
+            ScanLog::create(array_merge($logData, [
+                'is_valid' => false,
+                'validation_message' => 'Expired invitation'
+            ]));
+    
+            return view('invitations.validation', [
+                'valid' => false,
+                'message' => 'This invitation has expired.',
+                'invitation' => $invitation
+            ]);
+        }
+    
+        if ($invitation->status !== 'active') {
+            ScanLog::create(array_merge($logData, [
+                'is_valid' => false,
+                'validation_message' => 'Inactive invitation'
+            ]));
+    
+            return view('invitations.validation', [
+                'valid' => false,
+                'message' => 'This invitation is not active.',
+                'invitation' => $invitation
+            ]);
+        }
+    
+        ScanLog::create(array_merge($logData, [
+            'is_valid' => true,
+            'validation_message' => 'Valid invitation'
+        ]));
+    
+        return view('invitations.validation', [
+            'valid' => true,
+            'message' => 'Invitation is valid!',
+            'invitation' => $invitation
         ]);
     }
 
-    // Show the edit form for an invitation
     public function edit($id)
     {
         $invitation = Invitation::findOrFail($id);
         return view('invitations.edit', compact('invitation'));
     }
 
-    // Update an invitation
     public function update(Request $request, $id)
     {
-        // Validate the request
         $request->validate([
             'guest_name' => 'required|string|max:255',
             'description' => 'required|string',
@@ -118,49 +134,33 @@ class InvitationController extends Controller
             'status' => 'required|in:active,inactive',
         ]);
 
-        // Find the invitation
         $invitation = Invitation::findOrFail($id);
+        $invitation->update($request->all());
 
-        // Update the invitation
-        $invitation->update([
-            'guest_name' => $request->guest_name,
-            'description' => $request->description,
-            'expire_at' => $request->expire_at,
-            'status' => $request->status,
-        ]);
-
-        // Redirect back with success message
-        return redirect()->route('invitations.index')->with([
-            'status' => 'Invitation updated successfully!',
-        ]);
+        return redirect()->route('invitations.index')->with('success', 'Invitation updated successfully!');
     }
 
-    // Delete an invitation
     public function destroy($id)
     {
         $invitation = Invitation::findOrFail($id);
-
-        // Delete the QR code file if it exists
-        if ($invitation->qrcode && Storage::exists('public/' . $invitation->qrcode)) {
+        if ($invitation->qrcode) {
             Storage::delete('public/' . $invitation->qrcode);
         }
-
-        // Delete the invitation
         $invitation->delete();
-
-        // Redirect back with success message
-        return redirect()->route('invitations.index')->with([
-            'status' => 'Invitation deleted successfully!',
-        ]);
+        return redirect()->route('invitations.index')->with('success', 'Invitation deleted successfully!');
     }
 
-    // Share the invitation
     public function share($id)
     {
-        // Update expired invitations before sharing
         $this->updateExpiredInvitations();
-        
         $invitation = Invitation::findOrFail($id);
         return view('invitations.share', compact('invitation'));
     }
+    public function showLogs($id)
+{
+    $invitation = Invitation::findOrFail($id);
+    $scanLogs = $invitation->scanLogs()->latest()->get();
+    
+    return view('invitations.logs', compact('invitation', 'scanLogs'));
+}
 }

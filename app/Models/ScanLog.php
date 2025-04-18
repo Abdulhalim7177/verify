@@ -15,13 +15,11 @@ class ScanLog extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'scanner_type',
-        'scanner_id',
-        'qr_type',
-        'qr_id',
-        'status',
-        'details',
-        'scanned_at',
+        'invitation_id',
+        'ip_address',
+        'user_agent',
+        'is_valid',
+        'validation_message'
     ];
 
     /**
@@ -49,4 +47,9 @@ class ScanLog extends Model
     {
         return $this->morphTo('qr_owner');
     }
+    // In app/Models/Invitation.php
+public function scanLogs()
+{
+    return $this->hasMany(ScanLog::class);
+}
 }

@@ -80,6 +80,13 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+
+Route::get('/invitations/validate/{token}', [InvitationController::class, 'validateInvitation'])
+    ->name('invitations.validate');
+Route::get('/invitations/{id}/logs', [InvitationController::class, 'showLogs'])
+->name('invitations.logs');
+    
+
 // Security Routes
 Route::prefix('security')->group(function () {
     Route::middleware(['guest:security', PreventUserAccessAdmin::class, PreventAdminAccessUser::class])->group(function () {
