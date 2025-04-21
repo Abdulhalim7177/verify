@@ -81,7 +81,7 @@
                                 <th>{{ __('Guest Name') }}</th>
                                 <th>{{ __('Description') }}</th>
                                 <th>{{ __('Expire At') }}</th>
-                                <th>{{ __('Actions') }}</th>
+                                <!-- <th>{{ __('Actions') }}</th>    -->
                             </tr>
                         </thead>
                         <tbody>
@@ -102,18 +102,18 @@
                                         <td>{{ $invitation->guest_name }}</td>
                                         <td>{{ $invitation->description }}</td>
                                         <td>
-                                            {{ $invitation->expire_at }}
+                                            {{ $invitation->expire_at }} 
                                             <span class="badge badge-danger">Expired</span>
                                         </td>
-                                        <td>
+                                        <!-- <td>
                                             <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">{{ __('Edit') }}</a>
                                             <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this invitation?')">{{ __('Delete') }}</button>
                                             </form>
-                                            <!-- Share button removed for expired invitations -->
-                                        </td>
+                                          
+                                        </td> -->
                                     </tr>
                                 @endif
                             @endforeach

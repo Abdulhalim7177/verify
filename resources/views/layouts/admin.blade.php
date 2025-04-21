@@ -255,13 +255,7 @@
                 @endif
                 <!--begin::Footer-->
                 <div class="aside-footer flex-column-auto py-5" id="kt_aside_footer">
-                    <!-- <a href="https://preview.keenthemes.com/html/metronic/docs" class="btn btn-flex btn-custom btn-primary w-100" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
-       <span class="btn-label">Docs & Components</span>
-       <i class="ki-duotone ki-document ms-2 fs-2">
-        <span class="path1"></span>
-        <span class="path2"></span>
-       </i>
-      </a>r -->
+
                 </div>
                 <!--end::Footer-->
             </div>
@@ -312,9 +306,6 @@
                             class="container-xxl py-6 py-lg-0 d-flex flex-column flex-lg-row align-items-lg-stretch justify-content-lg-between ">
                             <!--begin::Page title-->
                             <div class="page-title d-flex justify-content-center flex-column me-5">
-                                <!--begin::Title-->
-                                <h1 class="d-flex flex-column text-dark fw-bold fs-3 mb-0 ">Current Page</h1>
-                                <!--end::Title-->
                             </div>
                             <!--end::Page title-->
                             <!--begin::Action group-->
@@ -323,14 +314,9 @@
                                 @if (Route::has('login'))
                                     <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                                         @auth
-                                            <a href="{{ url('/home') }}" class="btn btn-sm btn-primary">Home</a>
+                                            <a href="{{ route('admin.dashboard') }}" class="btn btn-sm btn-primary">Home</a>
                                         @else
-                                            <a href="{{ route('login') }}" class="btn btn-sm btn-secondary">Log in</a>
-
-                                            @if (Route::has('register'))
-                                                <a href="{{ route('register') }}"
-                                                    class="btn btn-sm btn-secondary ml-2">Register</a>
-                                            @endif
+                                            
                                         @endauth
                                     </div>
                                 @endif

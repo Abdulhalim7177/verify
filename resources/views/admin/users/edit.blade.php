@@ -1,5 +1,7 @@
 @extends('layouts.admin')
+
 @section('content')
+
 <div class="container">
     <h1>Edit User</h1>
     <form action="{{ route('admin.users.update', $user->id) }}" method="POST">

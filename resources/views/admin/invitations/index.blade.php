@@ -170,20 +170,9 @@
                                             <a href="{{ route('invitations.share', $invitation->id) }}" class="btn btn-sm btn-outline-primary rounded-2 px-3">
                                                 <i class="fas fa-share-alt"></i>
                                             </a>
-                                            <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-outline-secondary rounded-2 px-3">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
                                             <button type="button" class="btn btn-sm btn-outline-info rounded-2 px-3" data-bs-toggle="modal" data-bs-target="#viewInvitationModal{{ $invitation->id }}">
                                                 <i class="fas fa-eye"></i>
                                             </button>
-                                            <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-2 px-3" 
-                                                    onclick="return confirm('Are you sure you want to delete this invitation?')">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -243,7 +232,7 @@
                             <th class="border-0 ps-4 py-3 text-uppercase small fw-semibold">{{ __('Guest Name') }}</th>
                             <th class="border-0 py-3 text-uppercase small fw-semibold">{{ __('Description') }}</th>
                             <th class="border-0 py-3 text-uppercase small fw-semibold">{{ __('Expired At') }}</th>
-                            <th class="border-0 text-end pe-4 py-3 text-uppercase small fw-semibold">{{ __('Actions') }}</th>
+                        
                         </tr>
                     </thead>
                     <tbody>
@@ -270,18 +259,7 @@
                                             <span class="badge bg-danger text-white ms-2 px-2 py-1 rounded-pill">Expired</span>
                                         </div>
                                     </td>
-                                    <td class="text-end pe-4 py-3">
-                                        <div class="btn-group">
-                                            <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-2 px-3" 
-                                                    onclick="return confirm('Are you sure you want to delete this invitation?')">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                    
                                 </tr>
                             @endif
                         @endforeach

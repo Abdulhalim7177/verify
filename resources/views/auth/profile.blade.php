@@ -55,8 +55,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="role">{{ __('Role') }}</label>
-                            <input type="text" name="role" id="role" class="form-control" value="{{ Auth::user()->role }}" required>
+                            <input type="text" name="role" id="role" class="form-control" value="{{ Auth::user()->role }}" hidden>
                         </div>
 
                         <div class="form-group">
