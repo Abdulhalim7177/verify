@@ -113,6 +113,12 @@ Route::prefix('security')->group(function () {
 });
 
 
+
+
+
+
+//user subscription routes
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/plans', [SubscriptionController::class, 'index'])->name('plans.index');
 });
