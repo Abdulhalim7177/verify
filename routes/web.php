@@ -1,24 +1,27 @@
 <?php
 
+use App\Http\Middleware\AdminGuard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\ProfileController;
-use App\Http\Controllers\ResidentQRCodeController;
-use App\Http\Controllers\InvitationController;
+use App\Http\Middleware\SecurityGuard;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\InvitationController;
+use App\Http\Middleware\PreventAdminAccessUser;
+use App\Http\Middleware\PreventUserAccessAdmin;
+use App\Http\Controllers\Auth\ProfileController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\Security\ScanController;
+use App\Http\Controllers\ResidentQRCodeController;
+use App\Http\Middleware\PreventOthersAccessSecurity;
+use App\Http\Middleware\PreventSecurityAccessOthers;
+use App\Http\Middleware\EnsureUserHasActiveSubscription;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
 use App\Http\Controllers\Security\Auth\LoginController as SecurityLoginController;
 use App\Http\Controllers\Security\DashboardController as SecurityDashboardController;
-use App\Http\Controllers\Security\ScanController;
-use App\Http\Middleware\AdminGuard;
-use App\Http\Middleware\SecurityGuard;
-use App\Http\Middleware\PreventAdminAccessUser;
-use App\Http\Middleware\PreventUserAccessAdmin;
-use App\Http\Middleware\PreventSecurityAccessOthers;
-use App\Http\Middleware\PreventOthersAccessSecurity;
 
 // Welcome Route
 Route::get('/', fn() => view('welcome'));
@@ -107,4 +110,20 @@ Route::prefix('security')->group(function () {
 
         Route::post('/verify', fn() => back()->with('success', 'Verification successful'))->name('security.verify');
     });
+});
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/plans', [SubscriptionController::class, 'index'])->name('plans.index');
+});
+
+Route::post('/subscribe/{plan}', [PaymentController::class, 'pay'])->name('pay');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/subscribe/{plan}', [PaymentController::class, 'pay'])->name('pay');
+    Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
+});
+
+Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
