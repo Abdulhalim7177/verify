@@ -127,3 +127,6 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
+Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(function () {
+    Route::get('/subscriptions/show', [App\Http\Controllers\HomeController::class, 'show'])->name('subscriptions.show');
+});

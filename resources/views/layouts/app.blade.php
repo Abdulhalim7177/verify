@@ -226,6 +226,21 @@
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
+                                <!--begin:Menu item-->
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link"
+                                        href="{{ route('subscriptions.show') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-credit-card fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">Subscriptions</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
                                 <!--end:Menu item-->
                                 <!--begin:Menu item-->
                                 <div class="menu-item">
