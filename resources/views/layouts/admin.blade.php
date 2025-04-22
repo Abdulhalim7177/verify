@@ -211,7 +211,6 @@
                                     <!--end:Menu link-->
                                 </div>
                                 <!--end:Menu item-->
-                                <!--begin:Menu item-->
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
                                     <a class="menu-link"
@@ -226,6 +225,50 @@
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
+                                <!--begin:Menu item-->
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link"
+                                        href="{{ route('admin.plans.index') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-abstract-13 fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">Subscription Plan</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link"
+                                        href="{{ route('admin.transactions.index') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-abstract-13 fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">Transactions</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link"
+                                        href="{{ route('admin.subscriptions.index') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-abstract-13 fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">Subscriptions</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                       
                                 <!--end:Menu item-->
                                 <!--begin:Menu item-->
                                 <div class="menu-item">
@@ -457,6 +500,8 @@
             <span class="path2"></span>
         </i>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <!--end::Scrolltop-->
     <!--begin::Javascript-->
     <script>
