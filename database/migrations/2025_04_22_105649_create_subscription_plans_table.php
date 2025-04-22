@@ -9,14 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('subscription_plans', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->decimal('price', 10, 2);
+            $table->integer('duration'); // in days
             $table->timestamps();
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */

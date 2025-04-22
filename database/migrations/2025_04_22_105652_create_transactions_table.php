@@ -9,13 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('payer_ref_no')->nullable();
+            $table->string('transaction_ref')->unique();
+            $table->decimal('amount', 10, 2);
+            $table->string('status'); // pending, successful, failed
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.

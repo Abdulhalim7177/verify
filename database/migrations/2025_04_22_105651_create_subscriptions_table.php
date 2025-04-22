@@ -9,13 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('subscription_plan_id')->constrained()->onDelete('cascade');
+            $table->timestamp('starts_at');
+            $table->timestamp('ends_at');
+            $table->string('status')->default('active'); // active, expired
             $table->timestamps();
         });
     }
+    
 
     /**
      * Reverse the migrations.
