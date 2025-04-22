@@ -22,7 +22,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
 use App\Http\Controllers\Security\Auth\LoginController as SecurityLoginController;
 use App\Http\Controllers\Security\DashboardController as SecurityDashboardController;
-
+use App\Http\Controllers\Admin\TransactionController;
 // Welcome Route
 Route::get('/', fn() => view('welcome'));
 
@@ -112,6 +112,13 @@ Route::prefix('security')->group(function () {
     });
 });
 
+// admin subscritop
+
+
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+});
 
 
 
