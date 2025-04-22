@@ -30,7 +30,7 @@ Route::get('/', fn() => view('welcome'));
 Auth::routes();
 
 // Authenticated User Routes
-Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessOthers::class])->group(function () {
+Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessOthers::class,  EnsureUserHasActiveSubscription::class])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/calendar', [HomeController::class, 'calendar'])->name('calendar');
 
