@@ -23,6 +23,8 @@ use App\Http\Controllers\Admin\InvitationController as AdminInvitationController
 use App\Http\Controllers\Security\Auth\LoginController as SecurityLoginController;
 use App\Http\Controllers\Security\DashboardController as SecurityDashboardController;
 use App\Http\Controllers\Admin\TransactionController;
+use App\Http\Controllers\Admin\PlanController;
+use App\Http\Controllers\Admin\UserSubscriptionController;
 // Welcome Route
 Route::get('/', fn() => view('welcome'));
 
@@ -116,10 +118,18 @@ Route::prefix('security')->group(function () {
 
 
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index');
+    Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
 });
 
+
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('plans', PlanController::class);
+
+    Route::get('/subscriptions/assign', [UserSubscriptionController::class, 'create'])->name('subscriptions.assign');
+    Route::post('/subscriptions/assign', [UserSubscriptionController::class, 'store'])->name('subscriptions.store');
+    Route::post('/subscriptions/{subscription}/deactivate', [UserSubscriptionController::class, 'deactivate'])->name('subscriptions.deactivate');
+});
 
 
 
