@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'security.guard' => SecurityGuard::class,
             'prevent.security.others' => PreventSecurityAccessOthers::class,
             'prevent.others.security' => PreventOthersAccessSecurity::class,
+            'noSubAccounts' => \App\Http\Middleware\PreventSubAccountActions::class,
 
             ];
         })
