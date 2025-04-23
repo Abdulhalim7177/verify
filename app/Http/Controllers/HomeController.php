@@ -1,8 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Subscription;
 
+use Carbon\Carbon;
+
+use App\Models\SubAccount;
+use App\Models\Subscription;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,18 +44,52 @@ class HomeController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $subAccounts = auth()->user()->subAccounts;
-        $subscription = $user->subscriptions()
-        
-        ->with('plan')
-        ->latest()
-        ->first();
-        $subAccount = \App\Models\SubAccount::where('email', $user->email)->first();
-        $subscriptionUserId = $subAccount->user_id ?? $user->id;
-        $subscriptions = Subscription::with('plan')->where('user_id', $subscriptionUserId)->latest()->get();
-        $isActive = $subscription && $subscription->ends_at >= now() && $subscription->status === 'active';
     
-        return view('subscriptions.show', compact('subscription', 'isActive', 'subscriptions'));
+        // Check if user is a sub-account
+        $subAccount = SubAccount::where('email', $user->email)->first();
+        $owner = $subAccount ? $subAccount->user : $user;
+    
+        // Get latest subscription (even expired)
+        $latestSubscription = Subscription::with('plan')
+            ->where('user_id', $owner->id)
+            ->latest()
+            ->first();
+    
+        $status = 'inactive';
+        $daysRemaining = null;
+        $isActive = false;
+    
+        if ($latestSubscription) {
+            // Check and update expired subscription
+            if (Carbon::parse($latestSubscription->ends_at)->isPast() && $latestSubscription->status === 'active') {
+                $latestSubscription->update(['status' => 'expired']);
+            }
+    
+            $daysRemaining = Carbon::now()->diffInDays(Carbon::parse($latestSubscription->ends_at), false);
+    
+            if ($latestSubscription->status === 'active') {
+                $isActive = true;
+    
+                if ($daysRemaining <= 10 && $daysRemaining > 0) {
+                    $status = 'expiring_soon';
+                } elseif ($daysRemaining > 10) {
+                    $status = 'active';
+                }
+            } elseif ($latestSubscription->status === 'expired') {
+                $status = 'expired';
+            }
+        }
+    
+        // Subscription history
+        $subscriptions = Subscription::with('plan')->where('user_id', $owner->id)->latest()->get();
+    
+        return view('subscriptions.show', [
+            'subscription' => $latestSubscription,
+            'subscriptions' => $subscriptions,
+            'isActive' => $isActive,
+            'status' => $status,
+            'daysRemaining' => $daysRemaining,
+        ]);
     }
     public function calendar()
     {

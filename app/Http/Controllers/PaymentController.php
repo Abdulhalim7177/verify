@@ -124,6 +124,7 @@ class PaymentController extends Controller
 
             $sub = \App\Models\SubAccount::where('email', auth()->user()->email)->first();
             $owner = $sub ? $sub->user : auth()->user();
+            $user = Auth::user();
 
             Subscription::create([
                 'user_id' => $owner->id,
