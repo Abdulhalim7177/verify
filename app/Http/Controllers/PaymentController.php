@@ -117,6 +117,7 @@ class PaymentController extends Controller
 
             Subscription::create([
                 'user_id' => $owner->id,
+                'paid_by_user_id' => $user->id, // actual payer (sub-account or same)
                 'subscription_plan_id' => $plan->id,
                 'starts_at' => now(),
                 'ends_at' => now()->addDays($plan->duration),

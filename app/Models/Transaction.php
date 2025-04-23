@@ -25,5 +25,8 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+    public function paidBy()
+{
+    return $this->belongsTo(\App\Models\User::class, 'paid_by_user_id');
+}
 }

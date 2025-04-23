@@ -28,6 +28,8 @@ class HomeController extends Controller
         $subAccounts = auth()->user()->subAccounts;
         $subAccount = \App\Models\SubAccount::where('email', $user->email)->first();
         $subscriptionUserId = $subAccount->user_id ?? $user->id;
+        $subscriptions = \App\Models\Subscription::with('plan')->where('user_id', $subscriptionUserId)->latest()->get();
+
         return view('home', compact('subAccounts'));
     }
 
@@ -40,16 +42,20 @@ class HomeController extends Controller
         $user = Auth::user();
         $subAccounts = auth()->user()->subAccounts;
         $subscription = $user->subscriptions()
+        
         ->with('plan')
         ->latest()
         ->first();
+        $subAccount = \App\Models\SubAccount::where('email', $user->email)->first();
+        $subscriptionUserId = $subAccount->user_id ?? $user->id;
+        $subscriptions = \App\Models\Subscription::with('plan')->where('user_id', $subscriptionUserId)->latest()->get();
         $isActive = $subscription && $subscription->ends_at >= now() && $subscription->status === 'active';
  
 
 return view('home', compact('subscription', 'isActive', 'subAccounts'));
 
     
-        return view('subscriptions.show', compact('subscription', 'isActive'));
+        return view('subscriptions.show', compact('subscription', 'isActive', 'subscriptions'));
     }
     public function calendar()
     {

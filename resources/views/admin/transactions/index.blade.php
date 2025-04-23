@@ -7,7 +7,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>User</th><th>Ref No</th><th>Amount</th><th>Status</th><th>Paid At</th>
+                <th>User</th><th>Ref No</th><th>Amount</th><th>Status</th> <th>Payer</th><th>Paid At</th>
             </tr>
         </thead>
         <tbody>
@@ -17,6 +17,7 @@
                     <td>{{ $txn->transaction_ref }}</td>
                     <td>₦{{ number_format($txn->amount, 2) }}</td>
                     <td>{{ ucfirst($txn->status) }}</td>
+                    <td>{{ $txn->paidBy?->name ?? $txn->user->name }}</td>
                     <td>{{ $txn->paid_at ?? '—' }}</td>
                 </tr>
             @empty
