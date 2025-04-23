@@ -12,12 +12,22 @@ class PaymentController extends Controller
 {
     public function pay(Request $request, $planId)
     {
+
         $plan = SubscriptionPlan::findOrFail($planId);
         $user = Auth::user();
 
         $sub = SubAccount::where('email', $user->email)->first();
 
         $owner = $sub ? $sub->user : $user;
+        $hasActive = \App\Models\Subscription::where('user_id', $owner->id)
+            ->where('ends_at', '>=', now())
+            ->where('status', 'active')
+            ->exists();
+
+        if ($hasActive) {
+            return back()->with('error', 'An active subscription already exists for this account.');
+        }
+
         // NABRoll keys
         $apiKey = 'Pk_TeStHV9FnLZE1vSidgkH36b4s473lpKYkI58gYgc6M';
         $secret = 'Sk_teSTN-HY[n1]wIO32A-AU0XP5kRZ[tzHpOxQ6bf9]]';

@@ -70,203 +70,203 @@
                     <!--begin::Aside user-->
                     <!--begin::User-->
                     @if (Auth::check())
-                        <div class="aside-user d-flex align-items-sm-center justify-content-center py-5">
-                            <!--begin::Symbol-->
-                            <div class="symbol symbol-50px">
-                                <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
-                                    alt="" />
-                            </div>
-                            <!--end::Symbol-->
-                            <!--begin::Wrapper-->
-                            <div class="aside-user-info flex-row-fluid flex-wrap ms-5">
-                                <!--begin::Section-->
-                                <div class="d-flex">
-                                    <!--begin::Info-->
-                                    <div class="flex-grow-1 me-2">
-                                        <!--begin::Username-->
-                                        <a href="#"
-                                            class="text-white text-hover-primary fs-6 fw-bold">{{ Auth::user()->name }}</a>
-                                        <!--end::Username-->
-                                        <!--begin::Description-->
-                                        <span
-                                            class="text-gray-600 fw-semibold d-block fs-8 mb-1">{{ Auth::user()->role }}</span>
-                                        <!--end::Description-->
-                                        <!--begin::Label-->
-                                        <div class="d-flex align-items-center text-success fs-9">
-                                            <span class="bullet bullet-dot bg-success me-1"></span>online
-                                        </div>
-                                        <!--end::Label-->
-                                    </div>
-                                    <!--end::Info-->
-                                    <!--begin::User menu-->
-                                    <div class="me-n2">
-                                        <!--begin::Action-->
-                                        <a href="#" class="btn btn-icon btn-sm btn-active-color-primary mt-n2"
-                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
-                                            data-kt-menu-overflow="true">
-                                            <i class="ki-duotone ki-setting-2 text-muted fs-1">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </a>
-                                        <!--begin::User account menu-->
-                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
-                                            data-kt-menu="true">
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <div class="menu-content d-flex align-items-center px-3">
-                                                    <!--begin::Avatar-->
-                                                    <div class="symbol symbol-50px me-5">
-                                                        <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
-                                                        alt="" />
-                                                    </div>
-                                                    <!--end::Avatar-->
-                                                    <!--begin::Username-->
-                                                    <div class="d-flex flex-column">
-                                                        <div class="fw-bold d-flex align-items-center fs-5">
-                                                            {{ Auth::user()->name }}
-                                                            <span
-                                                                class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
-                                                        </div>
-                                                        <a href="#"
-                                                            class="fw-semibold text-muted text-hover-primary fs-7">{{ Auth::user()->email }}</a>
-                                                    </div>
-                                                    <!--end::Username-->
-                                                </div>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator my-2"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-5">
-                                                <a href="{{ route('profile.edit') }}" class="menu-link px-5">Update Profile</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-5">
-                                                <a href="" class="menu-link px-5">
-                                                    <span class="menu-text">My Invitations</span>
-                                                    <span class="menu-badge">
-                                                        <span
-                                                            class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
-                                                    </span>
-                                                </a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator my-2"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-5">
-                                                <a href="{{ route('logout') }}" class="menu-link px-5"
-                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign
-                                                    Out</a>
-                                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                                    style="display: none;">
-                                                    @csrf
-                                                </form>
-                                            </div>
-                                            <!--end::Menu item-->
-                                        </div>
-                                        <!--end::User account menu-->
-                                        <!--end::Action-->
-                                    </div>
-                                    <!--end::User menu-->
-                                </div>
-                                <!--end::Section-->
-                            </div>
-                            <!--end::Wrapper-->
+                    <div class="aside-user d-flex align-items-sm-center justify-content-center py-5">
+                        <!--begin::Symbol-->
+                        <div class="symbol symbol-50px">
+                            <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
+                                alt="" />
                         </div>
-                        <!--end::User-->
+                        <!--end::Symbol-->
+                        <!--begin::Wrapper-->
+                        <div class="aside-user-info flex-row-fluid flex-wrap ms-5">
+                            <!--begin::Section-->
+                            <div class="d-flex">
+                                <!--begin::Info-->
+                                <div class="flex-grow-1 me-2">
+                                    <!--begin::Username-->
+                                    <a href="#"
+                                        class="text-white text-hover-primary fs-6 fw-bold">{{ Auth::user()->name }}</a>
+                                    <!--end::Username-->
+                                    <!--begin::Description-->
+                                    <span
+                                        class="text-gray-600 fw-semibold d-block fs-8 mb-1">{{ Auth::user()->role }}</span>
+                                    <!--end::Description-->
+                                    <!--begin::Label-->
+                                    <div class="d-flex align-items-center text-success fs-9">
+                                        <span class="bullet bullet-dot bg-success me-1"></span>online
+                                    </div>
+                                    <!--end::Label-->
+                                </div>
+                                <!--end::Info-->
+                                <!--begin::User menu-->
+                                <div class="me-n2">
+                                    <!--begin::Action-->
+                                    <a href="#" class="btn btn-icon btn-sm btn-active-color-primary mt-n2"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-start"
+                                        data-kt-menu-overflow="true">
+                                        <i class="ki-duotone ki-setting-2 text-muted fs-1">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </a>
+                                    <!--begin::User account menu-->
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
+                                        data-kt-menu="true">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <div class="menu-content d-flex align-items-center px-3">
+                                                <!--begin::Avatar-->
+                                                <div class="symbol symbol-50px me-5">
+                                                    <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
+                                                        alt="" />
+                                                </div>
+                                                <!--end::Avatar-->
+                                                <!--begin::Username-->
+                                                <div class="d-flex flex-column">
+                                                    <div class="fw-bold d-flex align-items-center fs-5">
+                                                        {{ Auth::user()->name }}
+                                                        <span
+                                                            class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
+                                                    </div>
+                                                    <a href="#"
+                                                        class="fw-semibold text-muted text-hover-primary fs-7">{{ Auth::user()->email }}</a>
+                                                </div>
+                                                <!--end::Username-->
+                                            </div>
+                                        </div>
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu separator-->
+                                        <div class="separator my-2"></div>
+                                        <!--end::Menu separator-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-5">
+                                            <a href="{{ route('profile.edit') }}" class="menu-link px-5">Update Profile</a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-5">
+                                            <a href="" class="menu-link px-5">
+                                                <span class="menu-text">My Invitations</span>
+                                                <span class="menu-badge">
+                                                    <span
+                                                        class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu separator-->
+                                        <div class="separator my-2"></div>
+                                        <!--end::Menu separator-->
+                                        <!--begin::Menu item-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-5">
+                                            <a href="{{ route('logout') }}" class="menu-link px-5"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign
+                                                Out</a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                style="display: none;">
+                                                @csrf
+                                            </form>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--end::User account menu-->
+                                    <!--end::Action-->
+                                </div>
+                                <!--end::User menu-->
+                            </div>
+                            <!--end::Section-->
+                        </div>
+                        <!--end::Wrapper-->
+                    </div>
+                    <!--end::User-->
                     @endif
                 </div>
                 <!--end::Aside Toolbar-->
                 @if (Auth::check())
-                    <!--begin::Aside menu-->
-                    <div class="aside-menu flex-column-fluid">
-                        <!--begin::Aside Menu-->
-                        <div class="hover-scroll-overlay-y px-2 my-5 my-lg-5" id="kt_aside_menu_wrapper"
-                            data-kt-scroll="true" data-kt-scroll-height="auto"
-                            data-kt-scroll-dependencies="{default: '#kt_aside_toolbar, #kt_aside_footer', lg: '#kt_header, #kt_aside_toolbar, #kt_aside_footer'}"
-                            data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="5px">
-                            <!--begin::Menu-->
-                            <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
-                                id="#kt_aside_menu" data-kt-menu="true">
-                                <!--end:Menu item-->
+                <!--begin::Aside menu-->
+                <div class="aside-menu flex-column-fluid">
+                    <!--begin::Aside Menu-->
+                    <div class="hover-scroll-overlay-y px-2 my-5 my-lg-5" id="kt_aside_menu_wrapper"
+                        data-kt-scroll="true" data-kt-scroll-height="auto"
+                        data-kt-scroll-dependencies="{default: '#kt_aside_toolbar, #kt_aside_footer', lg: '#kt_header, #kt_aside_toolbar, #kt_aside_footer'}"
+                        data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="5px">
+                        <!--begin::Menu-->
+                        <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500"
+                            id="#kt_aside_menu" data-kt-menu="true">
+                            <!--end:Menu item-->
 
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link" href="{{ route('home') }}">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-user fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
-                                        <span class="menu-title">User</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                                <!--end:Menu item-->
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link"
-                                        href="{{ route('invitations.index') }}">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-abstract-13 fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
-                                        <span class="menu-title">Invitations</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link"
-                                        href="{{ route('subscriptions.show') }}">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-credit-card fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
-                                        <span class="menu-title">Subscriptions</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                                <!--end:Menu item-->
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link" href="../../demo8/dist/apps/calendar.html">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-calendar-8 fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                                <span class="path4"></span>
-                                                <span class="path5"></span>
-                                                <span class="path6"></span>
-                                            </i>
-                                        </span>
-                                        <span class="menu-title">Calendar</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                                <!--end:Menu item-->
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link" href="{{ route('home') }}">
+                                    <span class="menu-icon">
+                                        <i class="ki-duotone ki-user fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </span>
+                                    <span class="menu-title">User</span>
+                                </a>
+                                <!--end:Menu link-->
                             </div>
-                            <!--end::Menu-->
+                            <!--end:Menu item-->
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link"
+                                    href="{{ route('invitations.index') }}">
+                                    <span class="menu-icon">
+                                        <i class="ki-duotone ki-abstract-13 fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </span>
+                                    <span class="menu-title">Invitations</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link"
+                                    href="{{ route('subscriptions.show') }}">
+                                    <span class="menu-icon">
+                                        <i class="ki-duotone ki-credit-card fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </span>
+                                    <span class="menu-title">Subscriptions</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link" href="../../demo8/dist/apps/calendar.html">
+                                    <span class="menu-icon">
+                                        <i class="ki-duotone ki-calendar-8 fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                            <span class="path4"></span>
+                                            <span class="path5"></span>
+                                            <span class="path6"></span>
+                                        </i>
+                                    </span>
+                                    <span class="menu-title">Calendar</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
                         </div>
-                        <!--end::Aside Menu-->
+                        <!--end::Menu-->
                     </div>
-                    <!--end::Aside menu-->
+                    <!--end::Aside Menu-->
+                </div>
+                <!--end::Aside menu-->
                 @endif
                 <!--begin::Footer-->
                 <div class="aside-footer flex-column-auto py-5" id="kt_aside_footer">
@@ -336,18 +336,18 @@
                             <div class="d-flex align-items-stretch overflow-auto pt-3 pt-lg-0">
                                 <!--begin::Action wrapper-->
                                 @if (Route::has('login'))
-                                    <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
-                                        @auth
-                                            <a href="{{ url('/home') }}" class="btn btn-sm btn-primary">Home</a>
-                                        @else
-                                            <a href="{{ route('login') }}" class="btn btn-sm btn-secondary">Log in</a>
+                                <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
+                                    @auth
+                                    <a href="{{ url('/home') }}" class="btn btn-sm btn-primary">Home</a>
+                                    @else
+                                    <a href="{{ route('login') }}" class="btn btn-sm btn-secondary">Log in</a>
 
-                                            @if (Route::has('register'))
-                                                <a href="{{ route('register') }}"
-                                                    class="btn btn-sm btn-secondary ml-2">Register</a>
-                                            @endif
-                                        @endauth
-                                    </div>
+                                    @if (Route::has('register'))
+                                    <a href="{{ route('register') }}"
+                                        class="btn btn-sm btn-secondary ml-2">Register</a>
+                                    @endif
+                                    @endauth
+                                </div>
                                 @endif
                                 <!--end::Action wrapper-->
                                 <!--begin::Theme mode-->
@@ -443,36 +443,89 @@
                 </div>
                 <!--end::Header-->
 
-                <main class="py-4">
-                    @yield('content')
-                </main>
+                <body>
+
+                    <main class="py-4">
+                    @php
+    use Carbon\Carbon;
+
+    $user = auth()->user();
+
+    $sub = \App\Models\SubAccount::where('email', $user->email)->first();
+    $owner = $sub ? $sub->user : $user;
+
+    $subscription = \App\Models\Subscription::where('user_id', $owner->id)
+        ->where('ends_at', '>=', now())
+        ->where('status', 'active')
+        ->latest()
+        ->first();
+
+    $expiresIn = $subscription ? Carbon::parse($subscription->ends_at)->diffInSeconds(now(), false) : null;
+@endphp
+
+@if ($subscription && $expiresIn > 0 && $expiresIn <= (3 * 24 * 60 * 60))
+    <div class="alert alert-warning text-center sticky-top z-50 mb-0 rounded-0">
+        <strong>⏰ Heads up!</strong> Your subscription expires in:
+        <span id="sub-expiry-timer" data-seconds="{{ $expiresIn }}"></span>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const timerEl = document.getElementById('sub-expiry-timer');
+            if (!timerEl) return;
+
+            let seconds = parseInt(timerEl.dataset.seconds);
+
+            const updateTimer = () => {
+                if (seconds <= 0) {
+                    timerEl.textContent = 'Expired!';
+                    return;
+                }
+
+                const d = Math.floor(seconds / 86400);
+                const h = Math.floor((seconds % 86400) / 3600);
+                const m = Math.floor((seconds % 3600) / 60);
+                const s = seconds % 60;
+
+                timerEl.textContent = `${d}d ${h}h ${m}m ${s}s`;
+                seconds--;
+                setTimeout(updateTimer, 1000);
+            };
+
+            updateTimer();
+        });
+    </script>
+@endif
+
+                        @yield('content')
+                    </main>
 
 
-                <!--begin::Footer-->
-                <div class="footer py-4 d-flex flex-lg-column" id="kt_footer" style="margin-top:auto;">
-                    <!--begin::Container-->
-                    <div
-                        class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
-                        <!--begin::Copyright-->
-                        <div class="text-dark order-2 order-md-1">
-                            <span class="text-muted fw-semibold me-1">2025&copy;</span>
-                            <a href="#" target="_blank" class="text-gray-800 text-hover-primary">Verify</a>
+                    <!--begin::Footer-->
+                    <div class="footer py-4 d-flex flex-lg-column" id="kt_footer" style="margin-top:auto;">
+                        <!--begin::Container-->
+                        <div
+                            class="container-fluid d-flex flex-column flex-md-row align-items-center justify-content-between">
+                            <!--begin::Copyright-->
+                            <div class="text-dark order-2 order-md-1">
+                                <span class="text-muted fw-semibold me-1">2025&copy;</span>
+                                <a href="#" target="_blank" class="text-gray-800 text-hover-primary">Verify</a>
+                            </div>
+                            <!--end::Copyright-->
+                            <!--begin::Menu-->
+                            <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+                                <li class="menu-item">
+                                    <a href="#" target="_blank" class="menu-link px-2">About</a>
+                                </li>
+                                <li class="menu-item">
+                                    <a href="#" target="_blank" class="menu-link px-2">Contact</a>
+                                </li>
+                            </ul>
+                            <!--end::Menu-->
                         </div>
-                        <!--end::Copyright-->
-                        <!--begin::Menu-->
-                        <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-                            <li class="menu-item">
-                                <a href="#" target="_blank" class="menu-link px-2">About</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="#" target="_blank" class="menu-link px-2">Contact</a>
-                            </li>
-                        </ul>
-                        <!--end::Menu-->
+                        <!--end::Container-->
                     </div>
-                    <!--end::Container-->
-                </div>
-                <!--end::Footer-->
+                    <!--end::Footer-->
             </div>
             <!--end::Wrapper-->
         </div>
@@ -486,6 +539,14 @@
             <span class="path2"></span>
         </i>
     </div>
+    <style>
+        .alert-warning {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+}
+
+    </style>
     <!--end::Scrolltop-->
     <!--begin::Javascript-->
     <script>

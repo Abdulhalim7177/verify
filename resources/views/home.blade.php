@@ -353,6 +353,22 @@
         </div>
     </div>
 </div>
+<hr class="my-4">
+<h5>Subscription History</h5>
+<table class="table table-bordered">
+    <thead><tr><th>Plan</th><th>Status</th><th>Starts</th><th>Ends</th></tr></thead>
+    <tbody>
+        @foreach ($subscriptions as $s)
+            <tr>
+                <td>{{ $s->plan->name }}</td>
+                <td>{{ ucfirst($s->status) }}</td>
+                <td>{{ $s->starts_at }}</td>
+                <td>{{ $s->ends_at }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
 
 <hr class="my-4">
 <h4>My Sub-Accounts</h4>

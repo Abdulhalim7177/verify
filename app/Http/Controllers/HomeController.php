@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Subscription;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -30,7 +31,7 @@ class HomeController extends Controller
         $subscriptionUserId = $subAccount->user_id ?? $user->id;
         $subscriptions = \App\Models\Subscription::with('plan')->where('user_id', $subscriptionUserId)->latest()->get();
 
-        return view('home', compact('subAccounts'));
+        return view('home', compact('subAccounts', 'subscriptions'));
     }
 
 
@@ -48,12 +49,8 @@ class HomeController extends Controller
         ->first();
         $subAccount = \App\Models\SubAccount::where('email', $user->email)->first();
         $subscriptionUserId = $subAccount->user_id ?? $user->id;
-        $subscriptions = \App\Models\Subscription::with('plan')->where('user_id', $subscriptionUserId)->latest()->get();
+        $subscriptions = Subscription::with('plan')->where('user_id', $subscriptionUserId)->latest()->get();
         $isActive = $subscription && $subscription->ends_at >= now() && $subscription->status === 'active';
- 
-
-return view('home', compact('subscription', 'isActive', 'subAccounts'));
-
     
         return view('subscriptions.show', compact('subscription', 'isActive', 'subscriptions'));
     }
