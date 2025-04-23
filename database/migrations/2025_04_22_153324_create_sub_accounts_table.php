@@ -13,8 +13,13 @@ return new class extends Migration
     {
         Schema::create('sub_accounts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // parent user
+            $table->string('name');
+            $table->string('email')->nullable();
+            $table->enum('relationship', ['child', 'spouse', 'sibling', 'parent', 'other'])->default('other');
             $table->timestamps();
         });
+        
     }
 
     /**

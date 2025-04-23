@@ -60,4 +60,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Models\Subscription::class);
     }
+    public function subAccounts()
+{
+    return $this->hasMany(\App\Models\SubAccount::class);
+}
+
 }

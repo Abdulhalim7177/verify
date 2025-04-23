@@ -5,6 +5,19 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="">
+		@if ($isActive)
+    <div class="alert alert-success">
+        You have an active subscription.
+        @if ($subAccount)
+            <span class="badge bg-info">Access via {{ $subAccount->user->name }}</span>
+        @endif
+    </div>
+@else
+    <div class="alert alert-warning">
+        You do not have an active subscription.
+    </div>
+@endif
+
 			<!--begin::Content-->
 			<div class="">
 				<!--begin::Contacts-->
@@ -352,4 +365,74 @@
         </div>
     </div>
 </div>
+
+<hr class="my-4">
+<h4>My Sub-Accounts</h4>
+
+<!-- Add Family Member Button -->
+<button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#subAccountModal">
+    Add Family Member
+</button>
+
+<!-- Sub-Accounts Table -->
+<table class="table">
+    <thead><tr><th>Name</th><th>Email</th><th>Relationship</th><th>Action</th></tr></thead>
+    <tbody>
+        @forelse ($subAccounts as $sub)
+            <tr>
+                <td>{{ $sub->name }}</td>
+                <td>{{ $sub->email ?? '—' }}</td>
+                <td>{{ ucfirst($sub->relationship) }}</td>
+                <td>
+                    <form method="POST" action="{{ route('subaccounts.destroy', $sub) }}">
+                        @csrf @method('DELETE')
+                        <button class="btn btn-sm btn-danger" onclick="return confirm('Remove sub-account?')">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        @empty
+            <tr><td colspan="4">No sub-accounts yet.</td></tr>
+        @endforelse
+    </tbody>
+</table>
+<!-- Modal -->
+<div class="modal fade" id="subAccountModal" tabindex="-1" aria-labelledby="subAccountModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ route('subaccounts.store') }}" class="modal-content">
+      @csrf
+      <div class="modal-header">
+        <h5 class="modal-title">Add Family Sub-Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email (optional)</label>
+            <input type="email" name="email" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label>Relationship</label>
+            <select name="relationship" class="form-select" required>
+                <option value="child">Child</option>
+                <option value="spouse">Spouse</option>
+                <option value="sibling">Sibling</option>
+                <option value="parent">Parent</option>
+                <option value="other" selected>Other</option>
+            </select>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Save Sub-Account</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 @endsection

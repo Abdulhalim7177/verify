@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
 use App\Http\Controllers\Security\Auth\LoginController as SecurityLoginController;
+use App\Http\Controllers\SubAccountController;
 use App\Http\Controllers\Security\DashboardController as SecurityDashboardController;
 use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\PlanController;
@@ -152,4 +153,11 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(funct
 });
 Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(function () {
     Route::get('/subscriptions/show', [App\Http\Controllers\HomeController::class, 'show'])->name('subscriptions.show');
+});
+
+// sub account routes
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('subaccounts', SubAccountController::class)->only(['index', 'create', 'store', 'destroy']);
 });

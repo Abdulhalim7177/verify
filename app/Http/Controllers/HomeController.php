@@ -24,7 +24,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $subAccounts = auth()->user()->subAccounts;
+        $subAccount = \App\Models\SubAccount::where('email', $user->email)->first();
+        $subscriptionUserId = $subAccount->user_id ?? $user->id;
+        return view('home', compact('subAccounts'));
     }
 
 
@@ -39,6 +42,10 @@ class HomeController extends Controller
         ->latest()
         ->first();
         $isActive = $subscription && $subscription->ends_at >= now() && $subscription->status === 'active';
+ 
+
+return view('home', compact('subscription', 'isActive', 'subAccounts'));
+
     
         return view('subscriptions.show', compact('subscription', 'isActive'));
     }
