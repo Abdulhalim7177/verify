@@ -49,7 +49,7 @@ class HomeController extends Controller
         $subAccount = SubAccount::where('email', $user->email)->first();
         $owner = $subAccount ? $subAccount->user : $user;
     
-        // Get latest subscription (even expired)
+        // Get latest subscription (even if expired)
         $latestSubscription = Subscription::with('plan')
             ->where('user_id', $owner->id)
             ->latest()
@@ -60,13 +60,17 @@ class HomeController extends Controller
         $isActive = false;
     
         if ($latestSubscription) {
-            // Check and update expired subscription
-            if (Carbon::parse($latestSubscription->ends_at)->isPast() && $latestSubscription->status === 'active') {
-                $latestSubscription->update(['status' => 'expired']);
+            $endsAt = Carbon::parse($latestSubscription->ends_at);
+    
+            // ✅ Check and update expired subscription
+            if ($endsAt->isPast() && $latestSubscription->status === 'active') {
+                $latestSubscription->status = 'expired';
+                $latestSubscription->save();
             }
     
-            $daysRemaining = Carbon::now()->diffInDays(Carbon::parse($latestSubscription->ends_at), false);
+            $daysRemaining = now()->diffInDays($endsAt, false);
     
+            // ✅ Determine subscription status
             if ($latestSubscription->status === 'active') {
                 $isActive = true;
     
@@ -80,8 +84,11 @@ class HomeController extends Controller
             }
         }
     
-        // Subscription history
-        $subscriptions = Subscription::with('plan')->where('user_id', $owner->id)->latest()->get();
+        // Subscription history for this user or their parent
+        $subscriptions = Subscription::with('plan')
+            ->where('user_id', $owner->id)
+            ->latest()
+            ->get();
     
         return view('subscriptions.show', [
             'subscription' => $latestSubscription,
@@ -91,6 +98,7 @@ class HomeController extends Controller
             'daysRemaining' => $daysRemaining,
         ]);
     }
+    
     public function calendar()
     {
         return view('calendar');
