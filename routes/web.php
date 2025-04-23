@@ -161,3 +161,9 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(funct
 Route::middleware(['auth'])->group(function () {
     Route::resource('subaccounts', SubAccountController::class)->only(['index', 'create', 'store', 'destroy']);
 });
+
+
+// adamin sub account routes
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/subaccounts', [\App\Http\Controllers\Admin\SubAccountController::class, 'index'])->name('subaccounts.index');
+});
