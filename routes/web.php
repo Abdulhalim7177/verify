@@ -157,6 +157,16 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(funct
 
 // sub account routes
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/subaccount/dashboard', function () {
+        if (!auth()->user()->is_sub_account) {
+            return redirect('/home');
+        }
+
+        return view('subaccounts.dashboard');
+    })->name('subaccount.dashboard');
+});
+
 
 Route::middleware(['auth'])->group(function () {
     Route::resource('subaccounts', SubAccountController::class)->only(['index', 'create', 'store', 'destroy']);

@@ -24,6 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         $subAccounts = auth()->user()->subAccounts;
         $subAccount = \App\Models\SubAccount::where('email', $user->email)->first();
         $subscriptionUserId = $subAccount->user_id ?? $user->id;
@@ -37,6 +38,7 @@ class HomeController extends Controller
     public function show()
     {
         $user = Auth::user();
+        $subAccounts = auth()->user()->subAccounts;
         $subscription = $user->subscriptions()
         ->with('plan')
         ->latest()

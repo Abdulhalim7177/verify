@@ -5,18 +5,6 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="">
-		@if ($isActive)
-    <div class="alert alert-success">
-        You have an active subscription.
-        @if ($subAccount)
-            <span class="badge bg-info">Access via {{ $subAccount->user->name }}</span>
-        @endif
-    </div>
-@else
-    <div class="alert alert-warning">
-        You do not have an active subscription.
-    </div>
-@endif
 
 			<!--begin::Content-->
 			<div class="">
@@ -415,6 +403,12 @@
             <label>Email (optional)</label>
             <input type="email" name="email" class="form-control">
         </div>
+		<!-- Add Password Field -->
+<div class="mb-3">
+    <label>Password (used for login)</label>
+    <input type="password" name="password" class="form-control" required>
+</div>
+
 
         <div class="mb-3">
             <label>Relationship</label>

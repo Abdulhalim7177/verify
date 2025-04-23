@@ -64,5 +64,9 @@ class User extends Authenticatable
 {
     return $this->hasMany(\App\Models\SubAccount::class);
 }
+public function parent()
+{
+    return $this->hasOne(\App\Models\SubAccount::class, 'email', 'email')->with('user');
+}
 
 }

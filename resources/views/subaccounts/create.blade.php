@@ -10,6 +10,12 @@
             <label>Name</label>
             <input type="text" name="name" class="form-control" required>
         </div>
+        <!-- Add Password Field -->
+        <div class="mb-3">
+            <label>Password (used for login)</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+
 
         <div class="mb-3">
             <label>Email (optional)</label>
