@@ -160,6 +160,19 @@
                                 <!--begin:Menu item-->
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
+                                    <a class="menu-link" href="{{ route('admin.dashboard') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-dashboard fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">Dashboard</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
                                     <a class="menu-link" href="{{ route('admin.users.index') }}">
                                         <span class="menu-icon">
                                             <i class="ki-duotone ki-user fs-2">
@@ -173,18 +186,27 @@
                                 </div>
                                 <!--end:Menu item-->
                                 <div class="menu-item">
+                                       <!--begin:Menu item-->
+                                <div class="menu-item">
                                     <!--begin:Menu link-->
-                                    <a class="menu-link"
-                                        href="{{ route('admin.invitations.index') }}">
+                                    <a class="menu-link" href="{{ route('admin.invitations.index') }}">
                                         <span class="menu-icon">
-                                            <i class="ki-duotone ki-abstract-13 fs-2">
+                                            <i class="ki-duotone ki-calendar-8 fs-2">
                                                 <span class="path1"></span>
                                                 <span class="path2"></span>
+                                                <span class="path3"></span>
+                                                <span class="path4"></span>
+                                                <span class="path5"></span>
+                                                <span class="path6"></span>
                                             </i>
                                         </span>
                                         <span class="menu-title">Invitations Management</span>
                                     </a>
                                     <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+                                    <!--begin:Menu link-->
+                                    
                                 </div>
                                 <!--begin:Menu item-->
                                 <div class="menu-item">
@@ -218,6 +240,20 @@
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
                                     <a class="menu-link"
+                                        href="{{ route('admin.subaccounts.index') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-abstract-13 fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">SubAccounts</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link"
                                         href="{{ route('admin.subscriptions.index') }}">
                                         <span class="menu-icon">
                                             <i class="ki-duotone ki-abstract-13 fs-2">
@@ -231,25 +267,7 @@
                                 </div>
                        
                                 <!--end:Menu item-->
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <!--begin:Menu link-->
-                                    <a class="menu-link" href="../../demo8/dist/apps/calendar.html">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-calendar-8 fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                                <span class="path4"></span>
-                                                <span class="path5"></span>
-                                                <span class="path6"></span>
-                                            </i>
-                                        </span>
-                                        <span class="menu-title">Calendar</span>
-                                    </a>
-                                    <!--end:Menu link-->
-                                </div>
-                                <!--end:Menu item-->
+                             
                             </div>
                             <!--end::Menu-->
                         </div>
@@ -271,7 +289,7 @@
                     <!--begin::Brand-->
                     <div class="header-brand ">
                         <!--begin::Logo-->
-                        <a href="">
+                        <a href="{{ route('admin.dashboard') }}" class="d-flex align-items-center">
                             <h1 class="text-white">KN Dalda</h1>
                         </a>
                         <!--end::Logo-->

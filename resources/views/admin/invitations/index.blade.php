@@ -183,7 +183,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <p><strong>{{ __('Host Name:') }}</strong> {{ $invitation->host_name }}</p>
+                                                <p><strong>{{ __('Host Name:') }}</strong> {{ $invitation->user_id }}</p>
                                                 <p><strong>{{ __('Guest Name:') }}</strong> {{ $invitation->guest_name }}</p>
                                                 <p><strong>{{ __('Description:') }}</strong> {{ $invitation->description }}</p>
                                                 <p><strong>{{ __('Expire At:') }}</strong> {{ $expireDate->format('M d, Y - H:i') }}</p>

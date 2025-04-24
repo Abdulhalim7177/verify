@@ -206,7 +206,26 @@
                                             <span class="path2"></span>
                                         </i>
                                     </span>
-                                    <span class="menu-title">User</span>
+                                    <span class="menu-title">Dashboard</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
+                                <!--begin:Menu item-->
+                                <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link" href="{{ route('invitations.index') }}">
+                                    <span class="menu-icon">
+                                        <i class="ki-duotone ki-calendar-8 fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                            <span class="path4"></span>
+                                            <span class="path5"></span>
+                                            <span class="path6"></span>
+                                        </i>
+                                    </span>
+                                    <span class="menu-title">Invitations</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
@@ -215,17 +234,18 @@
                             <div class="menu-item">
                                 <!--begin:Menu link-->
                                 <a class="menu-link"
-                                    href="{{ route('invitations.index') }}">
+                                    href="{{ route('subaccounts.index') }}">
                                     <span class="menu-icon">
-                                        <i class="ki-duotone ki-abstract-13 fs-2">
+                                    <i class="ki-duotone ki-user fs-2">
                                             <span class="path1"></span>
                                             <span class="path2"></span>
                                         </i>
                                     </span>
-                                    <span class="menu-title">Invitations</span>
+                                    <span class="menu-title">Sub Accounts</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
+                            <!--end:Menu item-->
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
@@ -242,25 +262,7 @@
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link" href="../../demo8/dist/apps/calendar.html">
-                                    <span class="menu-icon">
-                                        <i class="ki-duotone ki-calendar-8 fs-2">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                            <span class="path3"></span>
-                                            <span class="path4"></span>
-                                            <span class="path5"></span>
-                                            <span class="path6"></span>
-                                        </i>
-                                    </span>
-                                    <span class="menu-title">Calendar</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
+                        
                         </div>
                         <!--end::Menu-->
                     </div>
@@ -288,7 +290,7 @@
                     <!--begin::Brand-->
                     <div class="header-brand ">
                         <!--begin::Logo-->
-                        <a href="">
+                        <a href="{{ route('home') }} class="d-flex align-items-center">
                             <h1 class="text-white">KN Dalda</h1>
                         </a>
                         <!--end::Logo-->
