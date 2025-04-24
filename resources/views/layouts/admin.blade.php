@@ -29,6 +29,9 @@
     <link href="assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
     <!--end::Global Stylesheets Bundle-->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <!--end::Head-->
 <!--begin::Body-->
@@ -71,12 +74,7 @@
                     <!--begin::User-->
                     @if (Auth::check())
                         <div class="aside-user d-flex align-items-sm-center justify-content-center py-5">
-                            <!--begin::Symbol-->
-                            <div class="symbol symbol-50px">
-                                <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
-                                    alt="" />
-                            </div>
-                            <!--end::Symbol-->
+                     
                             <!--begin::Wrapper-->
                             <div class="aside-user-info flex-row-fluid flex-wrap ms-5">
                                 <!--begin::Section-->
@@ -95,6 +93,15 @@
                                         <div class="d-flex align-items-center text-success fs-9">
                                             <span class="bullet bullet-dot bg-success me-1"></span>online
                                         </div>
+                                        <div class="text-white fs-8 fw-bold mt-1">
+                                                <a href="{{ route('logout') }}" class="btn btn-danger"
+                                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log
+                                                    Out</a>
+                                                <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
+                                                    style="display: none;">
+                                                    @csrf
+                                                </form>
+                                            </div>
                                         <!--end::Label-->
                                     </div>
                                     <!--end::Info-->
@@ -112,53 +119,7 @@
                                         <!--begin::User account menu-->
                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
                                             data-kt-menu="true">
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <div class="menu-content d-flex align-items-center px-3">
-                                                    <!--begin::Avatar-->
-                                                    <div class="symbol symbol-50px me-5">
-                                                        <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
-                                                        alt="" />
-                                                    </div>
-                                                    <!--end::Avatar-->
-                                                    <!--begin::Username-->
-                                                    <div class="d-flex flex-column">
-                                                        <div class="fw-bold d-flex align-items-center fs-5">
-                                                            {{ Auth::user()->name }}
-                                                            <span
-                                                                class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
-                                                        </div>
-                                                        <a href="#"
-                                                            class="fw-semibold text-muted text-hover-primary fs-7">{{ Auth::user()->email }}</a>
-                                                    </div>
-                                                    <!--end::Username-->
-                                                </div>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator my-2"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-5">
-                                                <a href="{{ route('profile.edit') }}" class="menu-link px-5">Update Profile</a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-5">
-                                                <a href="" class="menu-link px-5">
-                                                    <span class="menu-text">My Invitations</span>
-                                                    <span class="menu-badge">
-                                                        <span
-                                                            class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
-                                                    </span>
-                                                </a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                            <!--begin::Menu separator-->
-                                            <div class="separator my-2"></div>
-                                            <!--end::Menu separator-->
-                                            <!--begin::Menu item-->
-                                             <!--begin::Menu item-->
+                                           
                                              <div class="menu-item px-5">
                                                 <a href="{{ route('logout') }}" class="menu-link px-5"
                                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign
@@ -522,6 +483,7 @@
     <script src="assets/js/custom/utilities/modals/users-search.js"></script>
     <!--end::Custom Javascript-->
     <!--end::Javascript-->
+    @yield('scripts')
 </body>
 <!--end::Body-->
 

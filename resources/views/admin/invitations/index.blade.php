@@ -167,9 +167,6 @@
                                     </td>
                                     <td class="text-end pe-4 py-3">
                                         <div class="btn-group">
-                                            <a href="{{ route('invitations.share', $invitation->id) }}" class="btn btn-sm btn-outline-primary rounded-2 px-3">
-                                                <i class="fas fa-share-alt"></i>
-                                            </a>
                                             <button type="button" class="btn btn-sm btn-outline-info rounded-2 px-3" data-bs-toggle="modal" data-bs-target="#viewInvitationModal{{ $invitation->id }}">
                                                 <i class="fas fa-eye"></i>
                                             </button>
@@ -186,6 +183,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
+                                                <p><strong>{{ __('Host Name:') }}</strong> {{ $invitation->host_name }}</p>
                                                 <p><strong>{{ __('Guest Name:') }}</strong> {{ $invitation->guest_name }}</p>
                                                 <p><strong>{{ __('Description:') }}</strong> {{ $invitation->description }}</p>
                                                 <p><strong>{{ __('Expire At:') }}</strong> {{ $expireDate->format('M d, Y - H:i') }}</p>
