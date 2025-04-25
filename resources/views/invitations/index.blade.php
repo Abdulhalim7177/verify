@@ -6,123 +6,170 @@
         <div class="col-lg-10">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h3 class="mb-0">{{ __('My Invitations') }}</h3>
-                    <a href="{{ route('invitations.create') }}" class="btn btn-light btn-sm">{{ __('Create New Invitation') }}</a>
+                    <h3 class="mb-0">My Invitations</h3>
+                    <a href="{{ route('invitations.create') }}" class="btn btn-light btn-sm">Create New Invitation</a>
                 </div>
 
                 <div class="card-body">
-                    @if (session('status'))
+                    @if (session('success'))
                         <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{ session('status') }}
+                            {{ session('success') }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     @endif
 
-                    <!-- Active Invitations -->
-                    <h4 class="mt-4">{{ __('Active Invitations') }}</h4>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="">
-                                <tr>
-                                    <th>{{ __('Guest Name') }}</th>
-                                    <th>{{ __('Description') }}</th>
-                                    <th>{{ __('Expire At') }}</th>
-                                    <th>{{ __('Actions') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $hasActiveInvitations = false;
-                                @endphp
-                                @foreach ($invitations as $invitation)
-                                    @php
-                                        $expireDate = \Carbon\Carbon::parse($invitation->expire_at);
-                                        $now = \Carbon\Carbon::now();
-                                        $diff = $now->diffInMinutes($expireDate, false);
-                                        $isExpired = $now->gt($expireDate);
-                                    @endphp
-                                    @if(!$isExpired)
+                    @if (session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
+
+                    {{-- === Active Invitations Toggle === --}}
+                    <h4 class="mt-4">
+                        <button class="btn btn-outline-dark btn-sm" data-bs-toggle="collapse" data-bs-target="#activeInvites">Toggle Active Invitations</button>
+                    </h4>
+                    <div class="collapse show" id="activeInvites">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Guest Name</th>
+                                        <th>Description</th>
+                                        <th>Expires</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php $hasOwnActive = false; @endphp
+                                    @foreach ($ownInvitations as $invitation)
                                         @php
-                                            $hasActiveInvitations = true;
+                                            $expired = \Carbon\Carbon::parse($invitation->expire_at)->isPast();
+                                            if (!$expired) $hasOwnActive = true;
                                         @endphp
+                                        @if (!$expired)
+                                            <tr>
+                                                <td>{{ $invitation->guest_name }}</td>
+                                                <td>{{ $invitation->description }}</td>
+                                                <td>{{ $invitation->expire_at }}</td>
+                                                <td>
+                                                    @if ($invitation->is_shared)
+                                                        <span class="badge bg-info">Shared</span>
+                                                    @else
+                                                        <span class="badge bg-success">Active</span>
+                                                    @endif
+                                                </td>
+                                                <td class="actions">
+                                                    @if (!$invitation->is_shared)
+                                                        <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                                        <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" class="d-inline">
+                                                            @csrf @method('DELETE')
+                                                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                        </form>
+                                                        <a href="{{ route('invitations.share', $invitation->id) }}"
+                                                           class="btn btn-sm btn-info share-btn"
+                                                           data-id="{{ $invitation->id }}">Share</a>
+                                                    @else
+                                                        <a href="{{ route('invitations.share', $invitation->id) }}"
+                                                           class="btn btn-sm btn-info">View Shared</a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                    @if (!$hasOwnActive)
                                         <tr>
-                                            <td>{{ $invitation->guest_name }}</td>
-                                            <td>{{ $invitation->description }}</td>
-                                            <td>
-                                                {{ $invitation->expire_at }}
-                                                @if($diff <= 20 && $diff > 0)
-                                                    <span class="badge bg-warning text-dark">{{ __('Expires soon') }}</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('invitations.edit', $invitation->id) }}" class="btn btn-sm btn-outline-warning">{{ __('Edit') }}</a>
-                                                <form action="{{ route('invitations.destroy', $invitation->id) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('{{ __('Are you sure you want to delete this invitation?') }}')">{{ __('Delete') }}</button>
-                                                </form>
-                                                <a href="{{ route('invitations.share', $invitation->id) }}" class="btn btn-sm btn-outline-info">{{ __('Share') }}</a>
-                                            </td>
+                                            <td colspan="5" class="text-center text-muted">No active invitations found</td>
                                         </tr>
                                     @endif
-                                @endforeach
-                                
-                                @if(!$hasActiveInvitations)
-                                    <tr>
-                                        <td colspan="4" class="text-center text-muted">{{ __('No active invitations found') }}</td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <!-- Expired Invitations -->
-                    <h4 class="mt-5">{{ __('Expired Invitations') }}</h4>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="">
-                                <tr>
-                                    <th>{{ __('Guest Name') }}</th>
-                                    <th>{{ __('Description') }}</th>
-                                    <th>{{ __('Expire At') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $hasExpiredInvitations = false;
-                                @endphp
-                                @foreach ($invitations as $invitation)
-                                    @php
-                                        $expireDate = \Carbon\Carbon::parse($invitation->expire_at);
-                                        $now = \Carbon\Carbon::now();
-                                        $isExpired = $now->gt($expireDate);
-                                    @endphp
-                                    @if($isExpired)
-                                        @php
-                                            $hasExpiredInvitations = true;
-                                        @endphp
+                    {{-- === Expired Invitations Toggle === --}}
+                    <h4 class="mt-5">
+                        <button class="btn btn-outline-dark btn-sm" data-bs-toggle="collapse" data-bs-target="#expiredInvites">Toggle Expired Invitations</button>
+                    </h4>
+                    <div class="collapse" id="expiredInvites">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Guest Name</th>
+                                        <th>Description</th>
+                                        <th>Expired At</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php $hasOwnExpired = false; @endphp
+                                    @foreach ($ownInvitations as $invitation)
+                                        @php $expired = \Carbon\Carbon::parse($invitation->expire_at)->isPast(); @endphp
+                                        @if ($expired)
+                                            @php $hasOwnExpired = true; @endphp
+                                            <tr>
+                                                <td>{{ $invitation->guest_name }}</td>
+                                                <td>{{ $invitation->description }}</td>
+                                                <td>{{ $invitation->expire_at }} <span class="badge bg-danger">Expired</span></td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                    @if (!$hasOwnExpired)
                                         <tr>
-                                            <td>{{ $invitation->guest_name }}</td>
-                                            <td>{{ $invitation->description }}</td>
-                                            <td>
-                                                {{ $invitation->expire_at }}
-                                                <span class="badge bg-danger">{{ __('Expired') }}</span>
-                                            </td>
+                                            <td colspan="3" class="text-center text-muted">No expired invitations</td>
                                         </tr>
                                     @endif
-                                @endforeach
-                                
-                                @if(!$hasExpiredInvitations)
-                                    <tr>
-                                        <td colspan="3" class="text-center text-muted">{{ __('No expired invitations found') }}</td>
-                                    </tr>
-                                @endif
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
+
+                    {{-- === Sub-Account Invitations Toggle === --}}
+                    @unless(auth()->user()->is_sub_account)
+                        <h4 class="mt-5">
+                            <button class="btn btn-outline-dark btn-sm" data-bs-toggle="collapse" data-bs-target="#subInvites">Toggle Sub-Account Invitations</button>
+                        </h4>
+                        <div class="collapse" id="subInvites">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Guest Name</th>
+                                            <th>Description</th>
+                                            <th>Expires</th>
+                                            <th>Created By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($subInvitations as $subInvite)
+                                            <tr>
+                                                <td>{{ $subInvite->guest_name }}</td>
+                                                <td>{{ $subInvite->description }}</td>
+                                                <td>
+                                                    {{ $subInvite->expire_at }}
+                                                    @if (\Carbon\Carbon::parse($subInvite->expire_at)->isPast())
+                                                        <span class="badge bg-danger">Expired</span>
+                                                    @else
+                                                        <span class="badge bg-success">Active</span>
+                                                    @endif
+                                                </td>
+                                                <td><span class="badge bg-info">{{ $subInvite->email }}</span></td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted">No sub-account invitations</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    @endunless
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @endsection

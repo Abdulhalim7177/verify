@@ -11,17 +11,23 @@ class Invitation extends Model
 
     protected $fillable = [
         'user_id',
+        'email',
         'guest_name',
         'description',
         'expire_at',
         'status',
-        'qrcode',
         'qrcodetoken',
+        'qrcode',
+        'is_shared', // Add the new field
     ];
 
-    // Relationship to the user who created the invitation
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function scanLogs()
+    {
+        return $this->hasMany(ScanLog::class);
     }
 }
