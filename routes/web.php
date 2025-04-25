@@ -1,57 +1,67 @@
 <?php
 
-use App\Http\Middleware\AdminGuard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\SecurityGuard;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\InvitationController;
-use App\Http\Middleware\PreventAdminAccessUser;
-use App\Http\Middleware\PreventUserAccessAdmin;
-use App\Http\Controllers\Auth\ProfileController;
-use App\Http\Controllers\SubscriptionController;
-use App\Http\Controllers\Security\ScanController;
-use App\Http\Controllers\ResidentQRCodeController;
-use App\Http\Middleware\PreventOthersAccessSecurity;
-use App\Http\Middleware\PreventSecurityAccessOthers;
-use App\Http\Middleware\EnsureUserHasActiveSubscription;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
-use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginController;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\InvitationController as AdminInvitationController;
-use App\Http\Controllers\Security\Auth\LoginController as SecurityLoginController;
-use App\Http\Controllers\SubAccountController;
-use App\Http\Controllers\Security\DashboardController as SecurityDashboardController;
-use App\Http\Controllers\Admin\TransactionController;
-use App\Http\Controllers\Admin\PlanController;
-use App\Http\Controllers\Admin\UserSubscriptionController;
-// Welcome Route
+use App\Http\Controllers\{
+    HomeController,
+    PaymentController,
+    InvitationController,
+    SubscriptionController,
+    ResidentQRCodeController,
+    SubAccountController,
+    Auth\ProfileController,
+    Security\ScanController,
+    Admin\UserController as AdminUserController,
+    Admin\Auth\LoginController as AdminLoginController,
+    Admin\DashboardController as AdminDashboardController,
+    Admin\InvitationController as AdminInvitationController,
+    Admin\TransactionController,
+    Admin\PlanController,
+    Admin\UserSubscriptionController,
+    Security\Auth\LoginController as SecurityLoginController,
+    Security\DashboardController as SecurityDashboardController,
+};
+use App\Http\Middleware\{
+    AdminGuard,
+    SecurityGuard,
+    PreventAdminAccessUser,
+    PreventUserAccessAdmin,
+    PreventOthersAccessSecurity,
+    PreventSecurityAccessOthers,
+    EnsureUserHasActiveSubscription,
+    PreventSubAccountActions,
+};
+
+// Welcome Page
 Route::get('/', fn() => view('welcome'));
 
-// Authentication Routes
+// Auth routes
 Auth::routes();
 
-// Authenticated User Routes
-Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessOthers::class,  EnsureUserHasActiveSubscription::class])->group(function () {
+// 🔒 Authenticated User Routes
+Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessOthers::class])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/calendar', [HomeController::class, 'calendar'])->name('calendar');
 
+    // Profile
     Route::prefix('profile')->group(function () {
         Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::post('/update', [ProfileController::class, 'update'])->name('profile.update');
     });
 
+    // Resident QR
     Route::prefix('resident/qrcode')->group(function () {
         Route::post('/generate', [ResidentQRCodeController::class, 'generateQRCode'])->name('resident.qrcode.generate');
     });
 
+    // Scan
     Route::prefix('scan')->group(function () {
         Route::get('/', [ProfileController::class, 'showScanForm'])->name('scan.form');
         Route::post('/process', [ProfileController::class, 'processScan'])->name('scan.process');
         Route::get('/result', fn() => view('scan.result'))->name('scan.result');
     });
 
+    // Invitations
     Route::prefix('invitations')->group(function () {
         Route::get('/', [InvitationController::class, 'index'])->name('invitations.index');
         Route::get('/create', [InvitationController::class, 'create'])->name('invitations.create');
@@ -61,9 +71,42 @@ Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessO
         Route::delete('/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');
         Route::get('/share/{invitation}', [InvitationController::class, 'share'])->name('invitations.share');
     });
+
+    // Subscriptions
+    Route::get('/subscriptions/show', [HomeController::class, 'show'])->name('subscriptions.show')->middleware(EnsureUserHasActiveSubscription::class);
+
+    // Plans & Payments
+    Route::get('/plans', [SubscriptionController::class, 'index'])->name('plans.index');
+    Route::post('/subscribe/{plan}', [PaymentController::class, 'pay'])->name('pay');
+    Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
+
+    // Sub-Account Dashboard
+    Route::get('/subaccount/dashboard', function () {
+        return auth()->user()->is_sub_account
+            ? view('subaccounts.dashboard')
+            : redirect('/home');
+    })->name('subaccount.dashboard');
+
+    // Sub-Accounts (only parent users)
+    Route::middleware(PreventSubAccountActions::class)->group(function () {
+        Route::resource('subaccounts', SubAccountController::class)->only([
+            'index', 'create', 'store', 'update', 'destroy', 'edit'
+        ]);
+        
+    });
 });
 
-// Admin Routes
+
+
+
+
+
+
+// 🔐 Invitation validation (outside auth)
+Route::get('/invitations/validate/{token}', [InvitationController::class, 'validateInvitation'])->name('invitations.validate');
+Route::get('/invitations/{id}/logs', [InvitationController::class, 'showLogs'])->name('invitations.logs');
+
+// 🔒 Admin Routes
 Route::prefix('admin')->group(function () {
     Route::middleware(['guest:admin', PreventUserAccessAdmin::class, PreventSecurityAccessOthers::class])->group(function () {
         Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
@@ -76,6 +119,7 @@ Route::prefix('admin')->group(function () {
 
         Route::resource('/users', AdminUserController::class)->names('admin.users');
 
+        // Admin Invitations
         Route::prefix('invitations')->group(function () {
             Route::get('/', [AdminInvitationController::class, 'index'])->name('admin.invitations.index');
             Route::get('/{invitation}', [AdminInvitationController::class, 'show'])->name('admin.invitations.show');
@@ -83,17 +127,29 @@ Route::prefix('admin')->group(function () {
             Route::delete('/{invitation}', [AdminInvitationController::class, 'destroy'])->name('admin.invitations.destroy');
             Route::post('/{invitation}/regenerate-qr', [AdminInvitationController::class, 'regenerateQr'])->name('admin.invitations.regenerate-qr');
         });
+
+        // Admin Subscriptions
+        Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('admin.subscriptions.index');
+        Route::get('/subscriptions/assign', [UserSubscriptionController::class, 'create'])->name('admin.subscriptions.assign');
+        Route::post('/subscriptions/assign', [UserSubscriptionController::class, 'store'])->name('admin.subscriptions.store');
+        Route::post('/subscriptions/{subscription}/deactivate', [UserSubscriptionController::class, 'deactivate'])->name('admin.subscriptions.deactivate');
+
+        // Admin Transactions
+        Route::get('/transactions', [TransactionController::class, 'index'])->name('admin.transactions.index');
+
+        // Admin Plans
+        Route::resource('plans', PlanController::class)->names('admin.plans');
+
+
+        // Admin Sub-Accounts View
+        Route::get('/subaccounts', [\App\Http\Controllers\Admin\SubAccountController::class, 'index'])->name('admin.subaccounts.index');
     });
 });
 
 
-Route::get('/invitations/validate/{token}', [InvitationController::class, 'validateInvitation'])
-    ->name('invitations.validate');
-Route::get('/invitations/{id}/logs', [InvitationController::class, 'showLogs'])
-->name('invitations.logs');
-    
 
-// Security Routes
+
+// 🔐 Security Routes
 Route::prefix('security')->group(function () {
     Route::middleware(['guest:security', PreventUserAccessAdmin::class, PreventAdminAccessUser::class])->group(function () {
         Route::get('/', [SecurityLoginController::class, 'showLoginForm'])->name('security.login');
@@ -113,68 +169,4 @@ Route::prefix('security')->group(function () {
 
         Route::post('/verify', fn() => back()->with('success', 'Verification successful'))->name('security.verify');
     });
-});
-
-// admin subscritop
-
-
-Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/subscriptions', [UserSubscriptionController::class, 'index'])->name('subscriptions.index');
-    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
-});
-
-
-Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('plans', PlanController::class);
-
-    Route::get('/subscriptions/assign', [UserSubscriptionController::class, 'create'])->name('subscriptions.assign');
-    Route::post('/subscriptions/assign', [UserSubscriptionController::class, 'store'])->name('subscriptions.store');
-    Route::post('/subscriptions/{subscription}/deactivate', [UserSubscriptionController::class, 'deactivate'])->name('subscriptions.deactivate');
-});
-
-
-
-
-//user subscription routes
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/plans', [SubscriptionController::class, 'index'])->name('plans.index');
-});
-
-Route::post('/subscribe/{plan}', [PaymentController::class, 'pay'])->name('pay');
-
-Route::middleware('auth')->group(function () {
-    Route::post('/subscribe/{plan}', [PaymentController::class, 'pay'])->name('pay');
-    Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
-});
-
-Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(function () {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-});
-Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(function () {
-    Route::get('/subscriptions/show', [App\Http\Controllers\HomeController::class, 'show'])->name('subscriptions.show');
-});
-
-// sub account routes
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/subaccount/dashboard', function () {
-        if (!auth()->user()->is_sub_account) {
-            return redirect('/home');
-        }
-
-        return view('subaccounts.dashboard');
-    })->name('subaccount.dashboard');
-});
-
-
-Route::middleware(['auth'])->group(function () {
-    Route::resource('subaccounts', SubAccountController::class)->only(['index', 'create', 'store', 'destroy']);
-});
-
-
-// adamin sub account routes
-Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/subaccounts', [\App\Http\Controllers\Admin\SubAccountController::class, 'index'])->name('subaccounts.index');
 });

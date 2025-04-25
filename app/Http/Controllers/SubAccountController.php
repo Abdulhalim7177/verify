@@ -36,7 +36,7 @@ class SubAccountController extends Controller
             'password' => bcrypt($request->password),
             'is_sub_account' => true, // ✅ mark as sub-account
         ]);
-        
+
 
         // 2. Create sub-account link
         auth()->user()->subAccounts()->create([
@@ -48,11 +48,34 @@ class SubAccountController extends Controller
         return redirect()->route('subaccounts.index')->with('success', 'Sub-account created successfully.');
     }
 
-
-    public function destroy(SubAccount $subAccount)
+    public function update(Request $request, $id)
     {
-        if ($subAccount->user_id !== auth()->id()) abort(403);
-        $subAccount->delete();
-        return back()->with('success', 'Sub-account removed.');
+        $sub = SubAccount::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'relationship' => 'required|string|max:50',
+        ]);
+
+        $sub->update($request->only('name', 'email', 'relationship'));
+
+        return back()->with('success', 'Sub-account updated successfully.');
     }
+
+
+    public function destroy($id)
+    {
+        $sub = SubAccount::findOrFail($id);
+    
+        // Ensure current user owns the subaccount
+        if ($sub->user_id !== auth()->id()) {
+            abort(403);
+        }
+    
+        $sub->delete();
+    
+        return back()->with('success', 'Sub-account deleted.');
+    }
+    
 }

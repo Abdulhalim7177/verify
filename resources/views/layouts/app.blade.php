@@ -230,10 +230,10 @@
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
-                            @unless(auth()->user()->is_sub_account)
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
+                                @unless(auth()->user()->is_sub_account)
                                 <a class="menu-link"
                                     href="{{ route('subaccounts.index') }}">
                                     <span class="menu-icon">
@@ -244,8 +244,8 @@
                                     </span>
                                     <span class="menu-title">Sub Accounts</span>
                                 </a>
-                                <!--end:Menu link-->
                                 @endunless
+                                <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
