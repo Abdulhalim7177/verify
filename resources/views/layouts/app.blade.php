@@ -230,6 +230,7 @@
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
+                            @unless(auth()->user()->is_sub_account)
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
@@ -244,6 +245,7 @@
                                     <span class="menu-title">Sub Accounts</span>
                                 </a>
                                 <!--end:Menu link-->
+                                @endunless
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->

@@ -157,6 +157,7 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class])->group(funct
 
 // sub account routes
 
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/subaccount/dashboard', function () {
         if (!auth()->user()->is_sub_account) {

@@ -30,12 +30,13 @@ class SubAccountController extends Controller
         ]);
 
         // 1. Create user in the users table
-        $subUser = User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
-            'is_sub_account' => true,
+            'is_sub_account' => true, // ✅ mark as sub-account
         ]);
+        
 
         // 2. Create sub-account link
         auth()->user()->subAccounts()->create([

@@ -27,6 +27,7 @@ class User extends Authenticatable
         'qrcode',
         'address',
         'image',
+        'is_sub_account',
     ];
 
     public function invitations()

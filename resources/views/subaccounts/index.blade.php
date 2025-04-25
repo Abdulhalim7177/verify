@@ -4,9 +4,10 @@
 <div class="container py-4">
     <h2 class="mb-4 fw-bold">My Family Sub-Accounts</h2>
 
-    <a href="{{ route('subaccounts.create') }}" class="btn btn-primary mb-3">
-        Add Sub-Account
-    </a>
+    @unless(auth()->user()->is_sub_account)
+    <a href="{{ route('subaccounts.create') }}" class="btn btn-primary">Add Sub-Account</a>
+@endunless
+
 
     <div class="table-responsive shadow-sm rounded ">
         <table class="table table-hover align-middle mb-0">
