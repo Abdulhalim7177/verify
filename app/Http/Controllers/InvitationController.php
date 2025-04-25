@@ -10,13 +10,31 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\SubAccount;
 
 class InvitationController extends Controller
 {
     public function index()
     {
         $this->updateExpiredInvitations();
-        $invitations = Auth::user()->invitations;
+
+        $user = Auth::user();
+        
+        // Get invitations from this user
+        $ownInvitations = $user->invitations()->get();
+        
+        // Get sub-account emails linked to this user
+        $subAccountEmails = SubAccount::where('user_id', $user->id)->pluck('email');
+        
+        // Get invitations created by sub-accounts (via email matching)
+        $subInvitations = \App\Models\Invitation::whereIn('email', $subAccountEmails)->get();
+        
+        // Merge both collections
+        $allInvitations = $ownInvitations->merge($subInvitations);
+        
+        // Sort by created_at descending
+        $invitations = $allInvitations->sortByDesc('created_at');
+        
         return view('invitations.index', compact('invitations'));
     }
 
@@ -48,6 +66,7 @@ class InvitationController extends Controller
 
         $invitation = Invitation::create([
             'user_id' => $user->id,
+            'email' => $user->email,
             'guest_name' => $request->guest_name,
             'description' => $request->description,
             'expire_at' => $request->expire_at,
