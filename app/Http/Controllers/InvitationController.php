@@ -6,10 +6,10 @@ use Carbon\Carbon;
 use App\Models\ScanLog;
 use App\Models\Invitation;
 use App\Models\SubAccount;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class InvitationController extends Controller
@@ -17,22 +17,19 @@ class InvitationController extends Controller
     public function index()
     {
         $this->updateExpiredInvitations();
-    
+
         $user = Auth::user();
-    
+
         // Invitations by parent user
         $ownInvitations = $user->invitations()->latest()->get();
-    
+
         // Invitations by sub-accounts (based on email)
-        $subAccountEmails = \App\Models\SubAccount::where('user_id', $user->id)->pluck('email');
-        $subInvitations = \App\Models\Invitation::whereIn('email', $subAccountEmails)->latest()->get();
-    
-        return view('invitations.index', [
-            'ownInvitations' => $ownInvitations,
-            'subInvitations' => $subInvitations,
-        ]);
+        $subAccountEmails = SubAccount::where('user_id', $user->id)->pluck('email');
+        $subInvitations = Invitation::whereIn('email', $subAccountEmails)->latest()->get();
+
+        return view('invitations.index', compact('ownInvitations', 'subInvitations'));
     }
-    
+
     private function updateExpiredInvitations()
     {
         $now = Carbon::now();
@@ -52,84 +49,108 @@ class InvitationController extends Controller
         $request->validate([
             'guest_name' => 'required|string|max:255',
             'description' => 'required|string',
-            'expire_at' => 'required|date|after_or_equal:now',
-            'status' => 'required|in:active,inactive',
+            'expire_at'   => 'required|date|after_or_equal:now',
+            'status'      => 'required|in:active,inactive',
         ]);
 
         $user = Auth::user();
-        $qrcodetoken = Str::random(100);
+        $token = Str::random(100);
 
         $invitation = Invitation::create([
-            'user_id' => $user->id,
-            'email' => $user->email, // track which user/subaccount created it
-            'guest_name' => $request->guest_name,
+            'user_id'     => $user->id,
+            'email'       => $user->email,
+            'guest_name'  => $request->guest_name,
             'description' => $request->description,
-            'expire_at' => $request->expire_at,
-            'status' => $request->status,
-            'qrcodetoken' => $qrcodetoken,
-            'is_shared' => false, // Add default value for new field
+            'expire_at'   => $request->expire_at,
+            'status'      => $request->status,
+            'qrcodetoken' => $token,
+            'is_shared'   => false,
         ]);
 
-        $validationLink = route('invitations.validate', $qrcodetoken);
-        $qrCodeImage = QrCode::format('svg')->size(200)->generate($validationLink);
-        $fileName = 'invitations/' . $invitation->id . '_qrcode.svg';
-        Storage::disk('public')->put($fileName, $qrCodeImage);
+        // Generate QR code containing only the token
+        $qrSvg = QrCode::format('svg')
+            ->size(200)
+            ->generate($token);
+        $fileName = "invitations/{$invitation->id}_qrcode.svg";
+        Storage::disk('public')->put($fileName, $qrSvg);
 
         $invitation->qrcode = $fileName;
         $invitation->save();
 
-        return redirect()->route('invitations.index')->with('success', 'Invitation created successfully!');
+        return redirect()->route('invitations.index')
+                         ->with('success', 'Invitation created successfully!');
     }
 
-    public function validateInvitation($token)
+    /**
+     * Verify token via POST and return invitation info as JSON
+     * Route to add in routes/api.php:
+     * Route::post('/invitations/verify', [InvitationController::class, 'verify']);
+     */
+    public function verify(Request $request)
     {
-        $invitation = Invitation::where('qrcodetoken', $token)->firstOrFail();
+        $request->validate([
+            'token' => 'required|string',
+        ]);
+
+        $invitation = Invitation::where('qrcodetoken', $request->token)->first();
+
+        if (! $invitation) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid token.',
+            ], 404);
+        }
+
         $now = Carbon::now();
 
-        $logData = [
-            'invitation_id' => $invitation->id,
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-        ];
-
-        if ($invitation->expire_at < $now) {
+        if ($invitation->expire_at->isPast()) {
+            // Mark expired
             $invitation->status = 'inactive';
             $invitation->save();
 
-            ScanLog::create(array_merge($logData, [
-                'is_valid' => false,
-                'validation_message' => 'Expired invitation'
-            ]));
-
-            return view('invitations.validation', [
-                'valid' => false,
-                'message' => 'This invitation has expired.',
-                'invitation' => $invitation
+            ScanLog::create([
+                'invitation_id'      => $invitation->id,
+                'ip_address'         => $request->ip(),
+                'user_agent'         => $request->userAgent(),
+                'is_valid'           => false,
+                'validation_message' => 'Expired invitation',
             ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'This invitation has expired.',
+            ], 410);
         }
 
         if ($invitation->status !== 'active') {
-            ScanLog::create(array_merge($logData, [
-                'is_valid' => false,
-                'validation_message' => 'Inactive invitation'
-            ]));
-
-            return view('invitations.validation', [
-                'valid' => false,
-                'message' => 'This invitation is not active.',
-                'invitation' => $invitation
+            ScanLog::create([
+                'invitation_id'      => $invitation->id,
+                'ip_address'         => $request->ip(),
+                'user_agent'         => $request->userAgent(),
+                'is_valid'           => false,
+                'validation_message' => 'Inactive invitation',
             ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'This invitation is not active.',
+            ], 403);
         }
 
-        ScanLog::create(array_merge($logData, [
-            'is_valid' => true,
-            'validation_message' => 'Valid invitation'
-        ]));
+        // Valid invitation
+        ScanLog::create([
+            'invitation_id'      => $invitation->id,
+            'ip_address'         => $request->ip(),
+            'user_agent'         => $request->userAgent(),
+            'is_valid'           => true,
+            'validation_message' => 'Valid invitation',
+        ]);
 
-        return view('invitations.validation', [
-            'valid' => true,
-            'message' => 'Invitation is valid!',
-            'invitation' => $invitation
+        return response()->json([
+            'success'    => true,
+            'invitation' => $invitation->only([
+                'id', 'guest_name', 'description', 'expire_at', 'status'
+            ]),
         ]);
     }
 
