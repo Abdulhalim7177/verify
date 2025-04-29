@@ -10,13 +10,13 @@ use App\Http\Controllers\{
     ResidentQRCodeController,
     SubAccountController,
     Auth\ProfileController,
-    Security\ScanController,
     Admin\UserController as AdminUserController,
     Admin\Auth\LoginController as AdminLoginController,
     Admin\DashboardController as AdminDashboardController,
     Admin\InvitationController as AdminInvitationController,
     Admin\TransactionController,
     Admin\PlanController,
+    Admin\ScanController,
     Admin\UserSubscriptionController,
     Security\Auth\LoginController as SecurityLoginController,
     Security\DashboardController as SecurityDashboardController,
@@ -148,6 +148,7 @@ Route::prefix('admin')->group(function () {
 
 Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('/securities', \App\Http\Controllers\Admin\SecurityUserController::class)->names('securities');
+    Route::get('/scanlogs', [ScanController::class, 'index'])->name('scanlogs.index');
 });
 
 
