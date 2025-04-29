@@ -35,18 +35,11 @@ class ScanLog extends Model
     /**
      * Get the scanner model.
      */
-    public function scanner()
+    public function invitation()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Invitation::class);
     }
-
-    /**
-     * Get the scanned QR code owner model.
-     */
-    public function scannable()
-    {
-        return $this->morphTo('qr_owner');
-    }
+    
     // In app/Models/Invitation.php
 public function scanLogs()
 {

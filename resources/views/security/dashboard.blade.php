@@ -1,11 +1,11 @@
-@extends('layouts.app')
+@extends('layouts.security')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Security Dashboard') }}</div>
+            <div class="alert alert-info text-center">
+                <h2>{{ __('Security Dashboard') }}</h2>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -23,7 +23,7 @@
                                 <div class="card-body text-center">
                                     <h5 class="card-title">Scan QR Codes</h5>
                                     <p class="card-text">Scan resident and visitor QR codes to verify their identity and permissions.</p>
-                                    <a href="{{ route('security.scan') }}" class="btn btn-primary">
+                                    <a href="" class="btn btn-primary">
                                         <i class="fas fa-qrcode me-2"></i> Scan QR Code
                                     </a>
                                 </div>
@@ -34,7 +34,7 @@
                                 <div class="card-body text-center">
                                     <h5 class="card-title">Scan History</h5>
                                     <p class="card-text">View your recent scans and verification history.</p>
-                                    <a href="{{ route('security.scan.history') }}" class="btn btn-secondary">
+                                    <a href="" class="btn btn-secondary">
                                         <i class="fas fa-history me-2"></i> View History
                                     </a>
                                 </div>

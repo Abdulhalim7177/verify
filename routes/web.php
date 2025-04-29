@@ -20,6 +20,7 @@ use App\Http\Controllers\{
     Admin\UserSubscriptionController,
     Security\Auth\LoginController as SecurityLoginController,
     Security\DashboardController as SecurityDashboardController,
+    Security\ScanHistoryController,
 };
 use App\Http\Middleware\{
     AdminGuard,
@@ -103,19 +104,6 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class, PreventAdminA
 
 
 
-// 🔐 Invitation validation (outside auth)
-Route::get('/invitations/validate/{token}', [InvitationController::class, 'validateInvitation'])->name('invitations.validate');
-Route::get('/invitations/{id}/logs', [InvitationController::class, 'showLogs'])->name('invitations.logs');
-
-
-
-Route::get('/invitations/verify', [InvitationController::class, 'showVerifyForm'])
-     ->name('invitations.web.verify.form');
-
-Route::post('/invitations/verify', [InvitationController::class, 'verifyWeb'])
-     ->name('invitations.web.verify');
-
-
 
 
 // 🔒 Admin Routes
@@ -182,3 +170,13 @@ Route::prefix('security')->group(function () {
         Route::post('/verify', fn() => back()->with('success', 'Verification successful'))->name('security.verify');
     });
 });
+
+Route::middleware(['auth:security', SecurityGuard::class])->group(function () {
+    Route::get('/invitations/verify', [InvitationController::class, 'showVerifyForm'])
+         ->name('invitations.web.verify.form');
+
+    Route::post('/invitations/verify', [InvitationController::class, 'verifyWeb'])
+         ->name('invitations.web.verify');
+});
+
+Route::get('/scanlogs', [ScanHistoryController::class, 'index'])->name('scanlogs.index');
