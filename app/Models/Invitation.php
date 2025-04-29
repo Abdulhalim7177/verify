@@ -18,9 +18,14 @@ class Invitation extends Model
         'status',
         'qrcodetoken',
         'qrcode',
-        'is_shared', // Add the new field
+        'is_shared',  
+        'street_address',   
+        'house_number', 
     ];
-
+    protected $casts = [
+        'expire_at' => 'datetime',
+    ];
+    
     public function user()
     {
         return $this->belongsTo(User::class);

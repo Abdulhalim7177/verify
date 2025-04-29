@@ -54,18 +54,20 @@ class InvitationController extends Controller
         ]);
 
         $user = Auth::user();
-        $token = Str::random(100);
-
+        $token = Str::random(12);
         $invitation = Invitation::create([
             'user_id'     => $user->id,
             'email'       => $user->email,
             'guest_name'  => $request->guest_name,
             'description' => $request->description,
+            'street_address' => $user->phone,
+            'house_number' => $request->house_number,
             'expire_at'   => $request->expire_at,
             'status'      => $request->status,
             'qrcodetoken' => $token,
             'is_shared'   => false,
         ]);
+        dd($invitation->toArray());
 
         // Generate QR code containing only the token
         $qrSvg = QrCode::format('svg')
@@ -153,6 +155,55 @@ class InvitationController extends Controller
             ]),
         ]);
     }
+
+/**
+ * Show a simple form where you can paste a token.
+ */
+public function showVerifyForm()
+{
+    return view('invitations.verify'); // see blade below
+}
+
+/**
+ * Handle the web form POST, verify token, and render results.
+ */
+public function verifyWeb(Request $request)
+{
+    $request->validate([
+        'token' => 'required|string',
+    ]);
+
+    $inv = Invitation::where('qrcodetoken', $request->token)->first();
+
+    if (! $inv) {
+        return back()->withErrors(['token' => 'Invalid token']);
+    }
+
+    // mark expired/inactive exactly as in your API verify...
+    $now = Carbon::now();
+    if ($inv->expire_at->isPast() || $inv->status !== 'active') {
+        $inv->status = 'inactive';
+        $inv->save();
+    }
+
+    // Log scan
+    ScanLog::create([
+        'invitation_id'      => $inv->id,
+        'ip_address'         => $request->ip(),
+        'user_agent'         => $request->userAgent(),
+        'is_valid'           => $inv->status === 'active',
+        'validation_message' => $inv->status === 'active' ? 'Valid invitation' : 'Invalid/expired',
+    ]);
+
+    return view('invitations.verify-result', [
+        'invitation' => $inv,
+    ]);
+}
+
+
+
+
+
 
     public function edit($id)
     {

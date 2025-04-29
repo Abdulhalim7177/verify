@@ -107,6 +107,17 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class, PreventAdminA
 Route::get('/invitations/validate/{token}', [InvitationController::class, 'validateInvitation'])->name('invitations.validate');
 Route::get('/invitations/{id}/logs', [InvitationController::class, 'showLogs'])->name('invitations.logs');
 
+
+
+Route::get('/invitations/verify', [InvitationController::class, 'showVerifyForm'])
+     ->name('invitations.web.verify.form');
+
+Route::post('/invitations/verify', [InvitationController::class, 'verifyWeb'])
+     ->name('invitations.web.verify');
+
+
+
+
 // 🔒 Admin Routes
 Route::prefix('admin')->group(function () {
     Route::middleware(['guest:admin', PreventUserAccessAdmin::class, PreventSecurityAccessOthers::class])->group(function () {
