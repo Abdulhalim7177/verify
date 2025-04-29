@@ -25,7 +25,8 @@ class User extends Authenticatable
         'phone',
         'altphone',
         'qrcode',
-        'address',
+        'street_address',
+        'house_number',
         'image',
         'is_sub_account',
     ];

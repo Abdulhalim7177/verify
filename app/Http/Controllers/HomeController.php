@@ -30,9 +30,9 @@ class HomeController extends Controller
     {
         $user = Auth::user();
         $subAccounts = auth()->user()->subAccounts;
-        $subAccount = \App\Models\SubAccount::where('email', $user->email)->first();
+        $subAccount = SubAccount::where('email', $user->email)->first();
         $subscriptionUserId = $subAccount->user_id ?? $user->id;
-        $subscriptions = \App\Models\Subscription::with('plan')->where('user_id', $subscriptionUserId)->latest()->get();
+        $subscriptions = Subscription::with('plan')->where('user_id', $subscriptionUserId)->latest()->get();
 
         return view('home', compact('subAccounts', 'subscriptions'));
     }

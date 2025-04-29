@@ -16,7 +16,8 @@ return new class extends Migration
                 $table->string('phone')->nullable();
                 $table->string('altphone')->nullable();
                 $table->string('qrcode')->nullable();
-                $table->text('address')->nullable();
+                $table->text('street_address')->nullable();
+                $table->text('house_number')->nullable();
                 $table->string('image')->nullable();
         });
     }
@@ -27,7 +28,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['role', 'phone', 'altphone', 'qrcode', 'address', 'image']);
+            $table->dropColumn(['role', 'phone', 'altphone', 'qrcode', 'street_address','house_number','image']);
         });
     }
 };

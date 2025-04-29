@@ -25,8 +25,9 @@ class ResidentQRCodeController extends Controller
         $qrContent = json_encode([
             'name' => $user->name,
             'role' => $user->role,
-            'address' => $user->address,
+            'street_address' => $user->street_address,
             'phone' => $user->phone,
+            'house_number' => $user->house_number,
             'altphone' => $user->altphone,
         ]);
 

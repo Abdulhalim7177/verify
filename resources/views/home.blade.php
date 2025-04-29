@@ -161,10 +161,19 @@
 									@endif
 									<!--end::Alternative Phone-->
 									<!--begin::Address-->
-									@if(Auth::user()->address)
+									@if(Auth::user()->street_address)
 									<div class="d-flex flex-column gap-1">
-										<div class="fw-bold text-muted">Address</div>
-										<p>{{Auth::user()->address}}
+										<div class="fw-bold text-muted">Street Address</div>
+										<p>{{Auth::user()->street_address}}
+											<br />
+									</div>
+									@endif
+									<!--end::Address-->
+									<!--begin::Address-->
+									@if(Auth::user()->house_number)
+									<div class="d-flex flex-column gap-1">
+										<div class="fw-bold text-muted">House Number</div>
+										<p>{{Auth::user()->house_number}}
 											<br />
 									</div>
 									@endif
@@ -309,9 +318,14 @@
 				</li>
 				@endif
 
-				@if (Auth::user()->address)
+				@if (Auth::user()->street_address)
 				<li class="list-group-item">
-					<strong>{{ __('Address:') }}</strong> {{ Auth::user()->address }}
+					<strong>{{ __('Street Address:') }}</strong> {{ Auth::user()->street_address }}
+				</li>
+				@endif
+				@if (Auth::user()->house_number)
+				<li class="list-group-item">
+					<strong>{{ __('House Number') }}</strong> {{ Auth::user()->house_number }}
 				</li>
 				@endif
 

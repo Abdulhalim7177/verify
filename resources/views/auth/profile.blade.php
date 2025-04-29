@@ -59,8 +59,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="address">{{ __('Address') }}</label>
-                            <input type="text" name="address" id="address" class="form-control" value="{{ Auth::user()->address }}" required>
+                            <label for="address">{{ __('Street Address') }}</label>
+                            <input type="text" name="street_address" id="street_address" class="form-control" value="{{ Auth::user()->street_address }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">{{ __('House Number') }}</label>
+                            <input type="text" name="house_number" id="house_number" class="form-control" value="{{ Auth::user()->house_number }}" required>
                         </div>
 
                         <div class="form-group">

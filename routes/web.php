@@ -39,7 +39,7 @@ Route::get('/', fn() => view('welcome'));
 Auth::routes();
 
 // 🔒 Authenticated User Routes
-Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessOthers::class])->group(function () {
+Route::middleware(['auth', EnsureUserHasActiveSubscription::class, PreventAdminAccessUser::class, PreventSecurityAccessOthers::class])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/calendar', [HomeController::class, 'calendar'])->name('calendar');
 
@@ -72,13 +72,7 @@ Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessO
         Route::get('/share/{invitation}', [InvitationController::class, 'share'])->name('invitations.share');
     });
 
-    // Subscriptions
-    Route::get('/subscriptions/show', [HomeController::class, 'show'])->name('subscriptions.show')->middleware(EnsureUserHasActiveSubscription::class);
-
-    // Plans & Payments
-    Route::get('/plans', [SubscriptionController::class, 'index'])->name('plans.index');
-    Route::post('/subscribe/{plan}', [PaymentController::class, 'pay'])->name('pay');
-    Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
+   
 
     // Sub-Account Dashboard
     Route::get('/subaccount/dashboard', function () {
@@ -95,6 +89,13 @@ Route::middleware(['auth', PreventAdminAccessUser::class, PreventSecurityAccessO
         
     });
 });
+ // Subscriptions
+ Route::get('/subscriptions/show', [HomeController::class, 'show'])->name('subscriptions.show')->middleware(EnsureUserHasActiveSubscription::class);
+
+ // Plans & Payments
+ Route::get('/plans', [SubscriptionController::class, 'index'])->name('plans.index');
+ Route::post('/subscribe/{plan}', [PaymentController::class, 'pay'])->name('pay');
+ Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
 
 
 
