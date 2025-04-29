@@ -158,9 +158,43 @@
                                 <!--end:Menu item-->
                                 <div class="menu-item">
                                        <!--begin:Menu item-->
+                                       <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link" href="{{ route('security.dashboard') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-calendar-8 fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                                <span class="path3"></span>
+                                                <span class="path4"></span>
+                                                <span class="path5"></span>
+                                                <span class="path6"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">Dashboard</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
-                                    <a class="menu-link" href="{{ route('admin.invitations.index') }}">
+                                    <a class="menu-link" href="{{ route('invitations.web.verify.form') }}">
+                                        <span class="menu-icon">
+                                            <i class="ki-duotone ki-calendar-8 fs-2">
+                                                <span class="path1"></span>
+                                                <span class="path2"></span>
+                                                <span class="path3"></span>
+                                                <span class="path4"></span>
+                                                <span class="path5"></span>
+                                                <span class="path6"></span>
+                                            </i>
+                                        </span>
+                                        <span class="menu-title">New Scan</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link" href="{{ route('scanlogs.index') }}">
                                         <span class="menu-icon">
                                             <i class="ki-duotone ki-calendar-8 fs-2">
                                                 <span class="path1"></span>
@@ -175,6 +209,7 @@
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
+                               
                                 <!--end:Menu item-->
                                     <!--begin:Menu link-->
                                     

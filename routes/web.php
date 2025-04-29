@@ -146,6 +146,9 @@ Route::prefix('admin')->group(function () {
     });
 });
 
+Route::middleware(['auth:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('/securities', \App\Http\Controllers\Admin\SecurityUserController::class)->names('securities');
+});
 
 
 
@@ -174,9 +177,9 @@ Route::prefix('security')->group(function () {
 Route::middleware(['auth:security', SecurityGuard::class])->group(function () {
     Route::get('/invitations/verify', [InvitationController::class, 'showVerifyForm'])
          ->name('invitations.web.verify.form');
+    Route::get('/scanlogs', [ScanHistoryController::class, 'index'])->name('scanlogs.index');
 
     Route::post('/invitations/verify', [InvitationController::class, 'verifyWeb'])
          ->name('invitations.web.verify');
 });
 
-Route::get('/scanlogs', [ScanHistoryController::class, 'index'])->name('scanlogs.index');

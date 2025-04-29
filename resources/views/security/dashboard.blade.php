@@ -23,7 +23,7 @@
                                 <div class="card-body text-center">
                                     <h5 class="card-title">Scan QR Codes</h5>
                                     <p class="card-text">Scan resident and visitor QR codes to verify their identity and permissions.</p>
-                                    <a href="" class="btn btn-primary">
+                                    <a href="{{ route('invitations.web.verify.form') }}" class="btn btn-primary">
                                         <i class="fas fa-qrcode me-2"></i> Scan QR Code
                                     </a>
                                 </div>
@@ -34,7 +34,7 @@
                                 <div class="card-body text-center">
                                     <h5 class="card-title">Scan History</h5>
                                     <p class="card-text">View your recent scans and verification history.</p>
-                                    <a href="" class="btn btn-secondary">
+                                    <a href="{{ route('scanlogs.index') }}" class="btn btn-secondary">
                                         <i class="fas fa-history me-2"></i> View History
                                     </a>
                                 </div>
