@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\ScanLog;
+use App\Models\User;
 use App\Models\Invitation;
 use App\Models\SubAccount;
 use Illuminate\Http\Request;
@@ -52,22 +53,22 @@ class InvitationController extends Controller
             'expire_at'   => 'required|date|after_or_equal:now',
             'status'      => 'required|in:active,inactive',
         ]);
-
+    
         $user = Auth::user();
         $token = Str::random(12);
         $invitation = Invitation::create([
-            'user_id'     => $user->id,
-            'email'       => $user->email,
-            'guest_name'  => $request->guest_name,
-            'description' => $request->description,
-            'street_address' => $user->phone,
-            'house_number' => $request->house_number,
-            'expire_at'   => $request->expire_at,
-            'status'      => $request->status,
-            'qrcodetoken' => $token,
-            'is_shared'   => false,
+            'user_id'       => $user->id,
+            'email'         => $user->email,
+            'guest_name'    => $request->guest_name,
+            'description'   => $request->description,
+            'expire_at'     => $request->expire_at,
+            'status'        => $request->status,
+            'qrcodetoken'   => $token,
+            'phone'         => $user->phone,
+            'street_address'=> $user->street_address, // Add this line
+            'house_number'  => $user->house_number,   // Add this line
+            'is_shared'     => false,
         ]);
-        dd($invitation->toArray());
 
         // Generate QR code containing only the token
         $qrSvg = QrCode::format('svg')
@@ -149,11 +150,17 @@ class InvitationController extends Controller
         ]);
 
         return response()->json([
-            'success'    => true,
-            'invitation' => $invitation->only([
-                'id', 'guest_name', 'description', 'expire_at', 'status'
-            ]),
+            'valid' => true,
+            'message' => 'Invitation valid',
+            'data' => [
+                'guest_name'     => $invitation->guest_name,
+                'description'    => $invitation->description,
+                'expires_at'     => $invitation->expire_at->toDateTimeString(),
+                'street_address' => $invitation->street_address,
+                'house_number'   => $invitation->house_number,
+            ],
         ]);
+        
     }
 
 /**

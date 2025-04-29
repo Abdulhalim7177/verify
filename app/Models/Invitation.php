@@ -18,10 +18,11 @@ class Invitation extends Model
         'status',
         'qrcodetoken',
         'qrcode',
-        'is_shared',  
-        'street_address',   
-        'house_number', 
+        'is_shared',
+        'street_address',
+        'house_number',   
     ];
+    
     protected $casts = [
         'expire_at' => 'datetime',
     ];
