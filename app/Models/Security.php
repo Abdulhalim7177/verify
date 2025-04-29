@@ -41,5 +41,6 @@ class Security extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'created_at' => 'datetime',
     ];
 }
