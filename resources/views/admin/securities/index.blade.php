@@ -8,7 +8,7 @@
     </div>
 
     @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     <div class="table-responsive">
@@ -24,67 +24,89 @@
             </thead>
             <tbody>
                 @forelse ($securities as $security)
-                    <tr>
-                        <td>{{ $security->name }}</td>
-                        <td>{{ $security->email }}</td>
-                        <td>{{ $security->phone }}</td>
-                        <td>{{ \Carbon\Carbon::parse($security->created_at)->format('d M, Y') }}</td>
-                        <td class="text-right">
-                            <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editSecurityModal-{{ $security->id }}">
-                                Edit
-                            </button>
+                <tr>
+                    <td>{{ $security->name }}</td>
+                    <td>{{ $security->email }}</td>
+                    <td>{{ $security->phone }}</td>
+                    <td>{{ \Carbon\Carbon::parse($security->created_at)->format('d M, Y') }}</td>
+                    <td class="text-right">
+                        <!-- Edit Button -->
+                        <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editSecurityModal-{{ $security->id }}">
+                            Edit
+                        </button>
 
-                            <form action="{{ route('admin.securities.destroy', $security) }}" method="POST" class="d-inline"
-                                  onsubmit="return confirm('Are you sure you want to delete this security user?')">
-                                @csrf @method('DELETE')
-                                <button class="btn btn-sm btn-danger">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+                        <!-- Delete Button -->
+                        <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteSecurityModal-{{ $security->id }}">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
 
-                    <!-- Bootstrap 4 Modal -->
-                    <div class="modal fade" id="editSecurityModal-{{ $security->id }}" tabindex="-1" role="dialog" aria-labelledby="editSecurityModalLabel-{{ $security->id }}" aria-hidden="true">
-                      <div class="modal-dialog" role="document">
+                <!-- Edit Modal (unchanged from previous message) -->
+                <div class="modal fade" id="editSecurityModal-{{ $security->id }}" tabindex="-1" role="dialog" aria-labelledby="editSecurityModalLabel-{{ $security->id }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
                         <form action="{{ route('admin.securities.update', $security) }}" method="POST">
                             @csrf
                             @method('PUT')
                             <div class="modal-content">
-                              <div class="modal-header">
-                                <h5 class="modal-title" id="editSecurityModalLabel-{{ $security->id }}">Edit Security: {{ $security->name }}</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                  <span aria-hidden="true">&times;</span>
-                                </button>
-                              </div>
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Edit Security: {{ $security->name }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                                </div>
 
-                              <div class="modal-body">
-                                <div class="form-group">
-                                    <label>Name</label>
-                                    <input name="name" class="form-control" required value="{{ old('name', $security->name) }}">
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <label>Name</label>
+                                        <input name="name" class="form-control" required value="{{ $security->name }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input name="email" type="email" class="form-control" required value="{{ $security->email }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Phone</label>
+                                        <input name="phone" class="form-control" required value="{{ $security->phone }}">
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input name="email" type="email" class="form-control" required value="{{ old('email', $security->email) }}">
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone</label>
-                                    <input name="phone" class="form-control" required value="{{ old('phone', $security->phone) }}">
-                                </div>
-                              </div>
 
-                              <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                              </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
                             </div>
                         </form>
-                      </div>
                     </div>
+                </div>
+
+                <!-- Delete Confirmation Modal -->
+                <div class="modal fade" id="deleteSecurityModal-{{ $security->id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ $security->id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <form action="{{ route('admin.securities.destroy', $security) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <div class="modal-content">
+                                <div class="modal-header bg-danger text-white">
+                                    <h5 class="modal-title">Delete Confirmation</h5>
+                                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Are you sure you want to delete <strong>{{ $security->name }}</strong>?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 @empty
-                    <tr>
-                        <td colspan="5" class="text-center text-muted">No security users found.</td>
-                    </tr>
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No security users found.</td>
+                </tr>
                 @endforelse
             </tbody>
+
         </table>
     </div>
 
