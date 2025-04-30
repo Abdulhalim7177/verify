@@ -49,6 +49,22 @@
                 </div>
             </div>
         </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Securities</h5>
+                    <p class="card-text display-6">{{ $totalSecurities }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Scans </h5>
+                    <p class="card-text display-6">{{ $scanLogs  }}</p>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="my-5">
 </div>

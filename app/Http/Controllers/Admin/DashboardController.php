@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\{Invitation, User, Subscription, Transaction};
+use App\Models\{Invitation, ScanLog, Security, User, Subscription, Transaction};
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -12,6 +12,8 @@ class DashboardController extends Controller
     public function index()
     {
         $totalUsers = User::count();
+        $totalSecurities = Security::count();
+        $scanLogs = ScanLog::count();
         $totalInvitations = Invitation::count();
         $totalTransactions = Transaction::count();
         $activeSubscriptions = Subscription::where('status', 'active')->count();
@@ -44,6 +46,8 @@ class DashboardController extends Controller
             'totalRevenue',
             'totalInvitations',
             'recentTransactions',
+            'scanLogs',
+            'totalSecurities',
             'recentSubscriptions'
             , 'dailyTransactionTotals'
         ));
