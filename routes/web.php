@@ -70,7 +70,7 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class, PreventAdminA
         Route::get('/{invitation}/edit', [InvitationController::class, 'edit'])->name('invitations.edit');
         Route::put('/{invitation}', [InvitationController::class, 'update'])->name('invitations.update');
         Route::delete('/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');
-        Route::get('/share/{invitation}', [InvitationController::class, 'share'])->name('invitations.share');
+    
     });
 
    
@@ -90,6 +90,8 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class, PreventAdminA
         
     });
 });
+Route::get('/invitations/share/{invitation}', [InvitationController::class, 'share'])
+     ->name('invitations.share');
  // Subscriptions
  Route::get('/subscriptions/show', [HomeController::class, 'show'])->name('subscriptions.show')->middleware(EnsureUserHasActiveSubscription::class);
 
