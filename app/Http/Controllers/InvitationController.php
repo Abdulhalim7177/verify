@@ -264,17 +264,21 @@ public function verifyWeb(Request $request)
         return redirect()->route('invitations.index')->with('success', 'Invitation deleted successfully!');
     }
 
-    public function share($id)
+    public function shareByToken($token)
     {
         $this->updateExpiredInvitations();
-        $invitation = Invitation::findOrFail($id);
-        
+    
+        $invitation = Invitation::where('qrcodetoken', $token)->firstOrFail();
+    
         // Mark invitation as shared
-        $invitation->is_shared = true;
-        $invitation->save();
-        
+        if (!$invitation->is_shared) {
+            $invitation->is_shared = true;
+            $invitation->save();
+        }
+    
         return view('invitations.share', compact('invitation'));
     }
+    
 
     public function showLogs($id)
     {

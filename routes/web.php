@@ -90,8 +90,9 @@ Route::middleware(['auth', EnsureUserHasActiveSubscription::class, PreventAdminA
         
     });
 });
-Route::get('/invitations/share/{invitation}', [InvitationController::class, 'share'])
+Route::get('/invitations/share/token/{token}', [InvitationController::class, 'shareByToken'])
      ->name('invitations.share');
+
  // Subscriptions
  Route::get('/subscriptions/show', [HomeController::class, 'show'])->name('subscriptions.show')->middleware(EnsureUserHasActiveSubscription::class);
 

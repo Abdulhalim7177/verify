@@ -67,11 +67,11 @@
                                                             @csrf @method('DELETE')
                                                             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                                         </form>
-                                                        <a href="{{ route('invitations.share', $invitation->id) }}"
+                                                        <a href="{{ route('invitations.share', $invitation->qrcodetoken) }}"
                                                            class="btn btn-sm btn-info share-btn"
                                                            data-id="{{ $invitation->id }}">Share</a>
                                                     @else
-                                                        <a href="{{ route('invitations.share', $invitation->id) }}"
+                                                        <a href="{{ route('invitations.share', ['token' => $invitation->qrcodetoken]) }}"
                                                            class="btn btn-sm btn-info">View Shared</a>
                                                     @endif
                                                 </td>
