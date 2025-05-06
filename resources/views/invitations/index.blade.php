@@ -55,9 +55,9 @@
                                                 <td>{{ $invitation->expire_at }}</td>
                                                 <td>
                                                     @if ($invitation->is_shared)
-                                                        <span class="badge bg-info">Shared</span>
+                                                        <span class="badge badge-light-info">Shared</span>
                                                     @else
-                                                        <span class="badge bg-success">Active</span>
+                                                        <span class="badge bg-light-success">Active</span>
                                                     @endif
                                                 </td>
                                                 <td class="actions">
@@ -111,7 +111,7 @@
                                             <tr>
                                                 <td>{{ $invitation->guest_name }}</td>
                                                 <td>{{ $invitation->description }}</td>
-                                                <td>{{ $invitation->expire_at }} <span class="badge bg-danger">Expired</span></td>
+                                                <td>{{ $invitation->expire_at }} <span class="badge bg-danger text-white py-2 m-2">Expired</span></td>
                                             </tr>
                                         @endif
                                     @endforeach

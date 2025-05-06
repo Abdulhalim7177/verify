@@ -143,17 +143,7 @@
                                             <a href="{{ route('profile.edit') }}" class="menu-link px-5">Update Profile</a>
                                         </div>
                                         <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-5">
-                                            <a href="" class="menu-link px-5">
-                                                <span class="menu-text">My Invitations</span>
-                                                <span class="menu-badge">
-                                                    <span
-                                                        class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
-                                                </span>
-                                            </a>
-                                        </div>
-                                        <!--end::Menu item-->
+                                       
                                         <!--begin::Menu separator-->
                                         <div class="separator my-2"></div>
                                         <!--end::Menu separator-->
@@ -237,11 +227,12 @@
                                 <a class="menu-link"
                                     href="{{ route('subaccounts.index') }}">
                                     <span class="menu-icon">
-                                    <i class="ki-duotone ki-user fs-2">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </span>
+											<i class="ki-duotone ki-address-book fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+												<span class="path3"></span>
+											</i>
+										</span>
                                     <span class="menu-title">Sub Accounts</span>
                                 </a>
                                 @endunless
@@ -254,11 +245,11 @@
                                 <a class="menu-link"
                                     href="{{ route('subscriptions.show') }}">
                                     <span class="menu-icon">
-                                        <i class="ki-duotone ki-credit-card fs-2">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </span>
+											<i class="ki-duotone ki-credit-cart fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+											</i>
+										</span>
                                     <span class="menu-title">Subscriptions</span>
                                 </a>
                                 <!--end:Menu link-->
@@ -267,6 +258,15 @@
                         
                         </div>
                         <!--end::Menu-->
+                        <div class="menu-item px-5">
+                                            <a class="btn btn-danger" href="{{ route('logout') }}" class="menu-link px-5"
+                                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Sign
+                                                Out</a>
+                                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                style="display: none;">
+                                                @csrf
+                                            </form>
+                                        </div>
                     </div>
                     <!--end::Aside Menu-->
                 </div>
