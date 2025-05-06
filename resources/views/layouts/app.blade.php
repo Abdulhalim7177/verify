@@ -6,20 +6,7 @@
     <base href="../../" />
     <title>KN Dalda</title>
     <meta charset="utf-8" />
-    <meta name="description"
-        content="The most advanced Bootstrap 5 Admin Theme with 40 unique prebuilt layouts on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Rails, Spring, Blazor, Django, Express.js, Node.js, Flask, Symfony & Laravel versions. Grab your copy now and get life-time updates for free." />
-    <meta name="keywords"
-        content="metronic, bootstrap, bootstrap 5, angular, VueJs, React, Asp.Net Core, Rails, Spring, Blazor, Django, Express.js, Node.js, Flask, Symfony & Laravel starter kits, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title"
-        content="Metronic - Bootstrap Admin Template, HTML, VueJS, React, Angular. Laravel, Asp.Net Core, Ruby on Rails, Spring Boot, Blazor, Django, Express.js, Node.js, Flask Admin Dashboard Theme & Template" />
-    <meta property="og:url" content="https://keenthemes.com/metronic" />
-    <meta property="og:site_name" content="Keenthemes | Metronic" />
-    <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
-    <!--begin::Fonts(mandatory for all pages)-->
+   
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
     <!--end::Fonts-->
     <!--begin::Vendor Stylesheets(used for this page only)-->
@@ -73,8 +60,8 @@
                     <div class="aside-user d-flex align-items-sm-center justify-content-center py-5">
                         <!--begin::Symbol-->
                         <div class="symbol symbol-50px">
-                            <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
-                                alt="" />
+                            <img src="{{ Auth::user()->image ? asset('storage/profile_images/' . Auth::user()->image) : asset('assets/media/avatars/placeholder.png') }}"
+                                alt="User Image" />
                         </div>
                         <!--end::Symbol-->
                         <!--begin::Wrapper-->
@@ -117,8 +104,11 @@
                                             <div class="menu-content d-flex align-items-center px-3">
                                                 <!--begin::Avatar-->
                                                 <div class="symbol symbol-50px me-5">
-                                                    <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}"
-                                                        alt="" />
+                                                    @if (Auth::user()->image)
+                                                        <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}" alt="" />
+                                                    @else
+                                                        <img src="{{ asset('assets/media/avatars/placeholder.png') }}" alt="Placeholder" />
+                                                    @endif
                                                 </div>
                                                 <!--end::Avatar-->
                                                 <!--begin::Username-->
@@ -345,11 +335,6 @@
                                     <a href="{{ url('/home') }}" class="btn btn-sm btn-primary">Home</a>
                                     @else
                                     <a href="{{ route('login') }}" class="btn btn-sm btn-secondary">Log in</a>
-
-                                    @if (Route::has('register'))
-                                    <a href="{{ route('register') }}"
-                                        class="btn btn-sm btn-secondary ml-2">Register</a>
-                                    @endif
                                     @endauth
                                 </div>
                                 @endif
