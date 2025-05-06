@@ -286,4 +286,67 @@ public function verifyWeb(Request $request)
         $scanLogs = $invitation->scanLogs()->latest()->get();
         return view('invitations.logs', compact('invitation', 'scanLogs'));
     }
+
+    public function shareApi($token)
+{
+    $this->updateExpiredInvitations();
+
+    $invitation = Invitation::where('qrcodetoken', $token)->first();
+
+    if (! $invitation) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Invitation not found.'
+        ], 404);
+    }
+
+    if ($invitation->expire_at->isPast()) {
+        $invitation->status = 'inactive';
+        $invitation->save();
+    }
+
+    // Mark as shared
+    if (! $invitation->is_shared) {
+        $invitation->is_shared = true;
+        $invitation->save();
+    }
+
+    return response()->json([
+        'success' => true,
+        'data' => [
+            'guest_name'     => $invitation->guest_name,
+            'description'    => $invitation->description,
+            'status'         => $invitation->status,
+            'expires_at'     => $invitation->expire_at->toDateTimeString(),
+            'street_address' => $invitation->street_address,
+            'house_number'   => $invitation->house_number,
+        ]
+    ]);
+}
+public function verifyApi(Request $request)
+{
+    return $this->verify($request);
+}
+public function logsApi()
+{
+    $logs = ScanLog::with('invitation:id,guest_name')->latest()->get();
+
+    return response()->json([
+        'success' => true,
+        'logs' => $logs->map(function ($log) {
+            return [
+                'id'                 => $log->id,
+                'invitation_id'      => $log->invitation_id,
+                'guest_name'         => $log->invitation->guest_name ?? null,
+                'ip_address'         => $log->ip_address,
+                'user_agent'         => $log->user_agent,
+                'is_valid'           => $log->is_valid,
+                'validation_message' => $log->validation_message,
+                'created_at'         => $log->created_at->toDateTimeString(),
+            ];
+        }),
+    ]);
+}
+
+
 }
