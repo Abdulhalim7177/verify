@@ -61,7 +61,7 @@
                         <!--begin::Symbol-->
                         <div class="symbol symbol-50px">
                             <img src="{{ Auth::user()->image ? asset('storage/profile_images/' . Auth::user()->image) : asset('assets/media/avatars/placeholder.png') }}"
-                                alt="User Image" />
+                            onerror="this.src='assets/media/avatars/blank.png'"/>
                         </div>
                         <!--end::Symbol-->
                         <!--begin::Wrapper-->
@@ -105,7 +105,7 @@
                                                 <!--begin::Avatar-->
                                                 <div class="symbol symbol-50px me-5">
                                                     @if (Auth::user()->image)
-                                                        <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}" alt="" />
+                                                        <img src="{{ asset('storage/profile_images/' . Auth::user()->image) }}" alt="" onerror="this.src='assets/media/avatars/blank.png'" />
                                                     @else
                                                         <img src="{{ asset('assets/media/avatars/placeholder.png') }}" alt="Placeholder" />
                                                     @endif

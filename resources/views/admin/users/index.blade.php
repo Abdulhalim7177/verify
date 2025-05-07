@@ -49,7 +49,8 @@
                                     <th class="min-w-50px pe-0 d-none d-md-table-cell">Id</th>
                                     <th class="min-w-200px">Name</th>
                                     <th class="min-w-125px d-none d-md-table-cell">Email</th>
-                                    <th class="min-w-125px d-none d-lg-table-cell">Address</th>
+                                    <th class="min-w-125px d-none d-lg-table-cell">Phone</th>
+                                    <th class="min-w-125px d-none d-lg-table-cell">House Number</th>
                                     <th class="text-end min-w-100px">Actions</th>
                                 </tr>
                             </thead>
@@ -79,6 +80,9 @@
                                     <td class="d-none d-md-table-cell">{{ $user->email }}</td>
                                     <td class="d-none d-lg-table-cell">
                                         <div class="badge badge-light fw-bold">{{ $user->phone }}</div>
+                                    </td>
+                                    <td class="d-none d-lg-table-cell">
+                                        <div class="badge badge-light fw-bold">{{ $user->house_number }}</div>
                                     </td>
                                     <td class="text-end">
                                         <a href="#" class="btn btn-light btn-active-light-primary btn-sm btn-icon me-1" data-bs-toggle="modal" data-bs-target="#viewUserModal{{ $user->id }}" title="View">
@@ -114,17 +118,18 @@
                                                     <span class="badge badge-light-primary">{{ $user->role }}</span>
                                                 </div>
                                                 <div class="d-flex flex-column px-5">
-                                                    <div class="d-flex justify-content-between mb-2">
-                                                        <span class="text-muted">ID:</span>
-                                                        <span class="fw-bold">{{ $user->id }}</span>
-                                                    </div>
+                                                    
                                                     <div class="d-flex justify-content-between mb-2">
                                                         <span class="text-muted">Email:</span>
                                                         <span class="fw-bold text-end">{{ $user->email }}</span>
                                                     </div>
                                                     <div class="d-flex justify-content-between mb-2">
-                                                        <span class="text-muted">Address:</span>
-                                                        <span class="fw-bold text-end">{{ $user->address }}</span>
+                                                        <span class="text-muted">Street Address:</span>
+                                                        <span class="fw-bold text-end">{{ $user->street_address }}</span>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between mb-2">
+                                                        <span class="text-muted">House Number:</span>
+                                                        <span class="fw-bold text-end">{{ $user->house_number }}</span>
                                                     </div>
                                                     <div class="d-flex justify-content-between mb-2">
                                                         <span class="text-muted">Phone:</span>
@@ -160,12 +165,12 @@
                                                         <input type="email" class="form-control" id="email{{ $user->id }}" name="email" value="{{ $user->email }}" required>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="address{{ $user->id }}" class="form-label">Address</label>
-                                                        <input type="text" class="form-control" id="address{{ $user->id }}" name="address" value="{{ $user->address }}">
+                                                        <label for="address{{ $user->id }}" class="form-label">Street Address</label>
+                                                        <input type="text" class="form-control" id="address{{ $user->id }}" name="address" value="{{ $user->street_address }}">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="image{{ $user->id }}" class="form-label">Profile Image</label>
-                                                        <input type="file" class="form-control" id="image{{ $user->id }}" name="image">
+                                                        <label for="address{{ $user->id }}" class="form-label">House Number</label>
+                                                        <input type="text" class="form-control" id="address{{ $user->id }}" name="address" value="{{ $user->house_number }}">
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -247,10 +252,7 @@
                         <label for="address" class="form-label">Address</label>
                         <input type="text" class="form-control" id="address" name="address">
                     </div>
-                    <div class="mb-3">
-                        <label for="image" class="form-label">Profile Image</label>
-                        <input type="file" class="form-control" id="image" name="image">
-                    </div>
+                    
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

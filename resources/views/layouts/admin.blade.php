@@ -5,18 +5,7 @@
 <head>
     <base href="../../" />
     <title>KN Dalda | Admin</title>
-    <meta charset="utf-8" />
-    <meta name="description"
-        content="The most advanced Bootstrap 5 Admin Theme with 40 unique prebuilt layouts on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Rails, Spring, Blazor, Django, Express.js, Node.js, Flask, Symfony & Laravel versions. Grab your copy now and get life-time updates for free." />
-    <meta name="keywords"
-        content="metronic, bootstrap, bootstrap 5, angular, VueJs, React, Asp.Net Core, Rails, Spring, Blazor, Django, Express.js, Node.js, Flask, Symfony & Laravel starter kits, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title"
-        content="Metronic - Bootstrap Admin Template, HTML, VueJS, React, Angular. Laravel, Asp.Net Core, Ruby on Rails, Spring Boot, Blazor, Django, Express.js, Node.js, Flask Admin Dashboard Theme & Template" />
-    <meta property="og:url" content="https://keenthemes.com/metronic" />
-    <meta property="og:site_name" content="Keenthemes | Metronic" />
+   
     <link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
     <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
     <!--begin::Fonts(mandatory for all pages)-->
@@ -161,12 +150,14 @@
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
                                     <a class="menu-link" href="{{ route('admin.dashboard') }}">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-dashboard fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
+                                    <span class="menu-icon">
+											<i class="ki-duotone ki-element-11 fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+												<span class="path3"></span>
+												<span class="path4"></span>
+											</i>
+										</span>
                                         <span class="menu-title">Dashboard</span>
                                     </a>
                                     <!--end:Menu link-->
@@ -174,12 +165,15 @@
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
                                     <a class="menu-link" href="{{ route('admin.users.index') }}">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-user fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
+                                    <span class="menu-icon">
+											<i class="ki-duotone ki-element-plus fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+												<span class="path3"></span>
+												<span class="path4"></span>
+												<span class="path5"></span>
+											</i>
+										</span>
                                         <span class="menu-title">User Management</span>
                                     </a>
                                     <!--end:Menu link-->
@@ -188,12 +182,13 @@
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
                                     <a class="menu-link" href="{{ route('admin.securities.index') }}">
-                                        <span class="menu-icon">
-                                            <i class="ki-duotone ki-user fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
+                                    	<span class="menu-icon">
+											<i class="ki-duotone ki-address-book fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+												<span class="path3"></span>
+											</i>
+										</span>
                                         <span class="menu-title">Security Management</span>
                                     </a>
                                     <!--end:Menu link-->
@@ -227,12 +222,13 @@
                                     <!--begin:Menu link-->
                                     <a class="menu-link"
                                         href="{{ route('admin.plans.index') }}">
+                                      
                                         <span class="menu-icon">
-                                            <i class="ki-duotone ki-abstract-13 fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
+											<i class="ki-duotone ki-abstract-38 fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+											</i>
+										</span>
                                         <span class="menu-title">Subscription Plan</span>
                                     </a>
                                     <!--end:Menu link-->
@@ -242,11 +238,12 @@
                                     <a class="menu-link"
                                         href="{{ route('admin.transactions.index') }}">
                                         <span class="menu-icon">
-                                            <i class="ki-duotone ki-abstract-13 fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
+											<i class="ki-duotone ki-chart-pie-3 fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+												<span class="path3"></span>
+											</i>
+										</span>
                                         <span class="menu-title">Transactions</span>
                                     </a>
                                     <!--end:Menu link-->
@@ -256,11 +253,11 @@
                                     <a class="menu-link"
                                         href="{{ route('admin.subaccounts.index') }}">
                                         <span class="menu-icon">
-                                            <i class="ki-duotone ki-abstract-13 fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
+											<i class="ki-duotone ki-abstract-25 fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+											</i>
+										</span>
                                         <span class="menu-title">SubAccounts</span>
                                     </a>
                                     <!--end:Menu link-->
@@ -286,11 +283,11 @@
                                     <a class="menu-link"
                                         href="{{ route('admin.subscriptions.index') }}">
                                         <span class="menu-icon">
-                                            <i class="ki-duotone ki-abstract-13 fs-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                            </i>
-                                        </span>
+											<i class="ki-duotone ki-credit-cart fs-2">
+												<span class="path1"></span>
+												<span class="path2"></span>
+											</i>
+										</span>
                                         <span class="menu-title">Subscriptions</span>
                                     </a>
                                     <!--end:Menu link-->
