@@ -464,6 +464,10 @@
                 <!--end::Header-->
 
                 <main class="py-4">
+                    <div class="container-xxl mt-5">
+    @include('partials.notifications')
+</div>
+
                     @yield('content')
                 </main>
 

@@ -30,8 +30,8 @@
                         <!--begin::Toolbar-->
                         <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                             <!--begin::Add user-->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">
-                                <i class="ki-duotone ki-plus fs-2 d-none d-md-inline-block me-2"></i>Add Account</button>
+                            <a href="{{route('admin.users.create')}}" class="btn btn-primary" >
+                                <i class="ki-duotone ki-plus fs-2 d-none d-md-inline-block me-2"></i>Add Account</a>
                             <!--end::Add user-->
                         </div>
                         <!--end::Toolbar-->
@@ -87,7 +87,7 @@
                                     <td class="text-end">
                                         <a href="#" class="btn btn-light btn-active-light-primary btn-sm btn-icon me-1" data-bs-toggle="modal" data-bs-target="#viewUserModal{{ $user->id }}" title="View">
                                             <i class="fas fa-eye"></i>
-                                        
+
                                         </a>
                                         <a href="#" class="btn btn-light btn-active-light-primary btn-sm btn-icon me-1" data-bs-toggle="modal" data-bs-target="#updateUserModal{{ $user->id }}" title="Edit">
                                             <i class="fas fa-edit"></i>
@@ -118,7 +118,7 @@
                                                     <span class="badge badge-light-primary">{{ $user->role }}</span>
                                                 </div>
                                                 <div class="d-flex flex-column px-5">
-                                                    
+
                                                     <div class="d-flex justify-content-between mb-2">
                                                         <span class="text-muted">Email:</span>
                                                         <span class="fw-bold text-end">{{ $user->email }}</span>
@@ -145,6 +145,7 @@
                                 </div>
 
                                 <!-- Update User Modal -->
+                                <!-- Update User Modal -->
                                 <div class="modal fade" id="updateUserModal{{ $user->id }}" tabindex="-1" aria-labelledby="updateUserModalLabel{{ $user->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
@@ -165,12 +166,16 @@
                                                         <input type="email" class="form-control" id="email{{ $user->id }}" name="email" value="{{ $user->email }}" required>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="address{{ $user->id }}" class="form-label">Street Address</label>
-                                                        <input type="text" class="form-control" id="address{{ $user->id }}" name="address" value="{{ $user->street_address }}">
+                                                        <label for="street_address{{ $user->id }}" class="form-label">Street Address</label>
+                                                        <input type="text" class="form-control" id="street_address{{ $user->id }}" name="street_address" value="{{ $user->street_address }}">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="address{{ $user->id }}" class="form-label">House Number</label>
-                                                        <input type="text" class="form-control" id="address{{ $user->id }}" name="address" value="{{ $user->house_number }}">
+                                                        <label for="house_number{{ $user->id }}" class="form-label">House Number</label>
+                                                        <input type="text" class="form-control" id="house_number{{ $user->id }}" name="house_number" value="{{ $user->house_number }}">
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="phone{{ $user->id }}" class="form-label">Phone</label>
+                                                        <input type="text" class="form-control" id="phone{{ $user->id }}" name="phone" value="{{ $user->phone }}">
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -252,7 +257,7 @@
                         <label for="address" class="form-label">Address</label>
                         <input type="text" class="form-control" id="address" name="address">
                     </div>
-                    
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -267,90 +272,90 @@
 
 @section('scripts')
 <script>
-// Document ready function
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize variables
-    const userTable = document.querySelector('#kt_table_users');
-    const searchInput = document.querySelector('[data-kt-user-table-filter="search"]');
-    const tableBody = userTable.querySelector('tbody');
-    const rows = Array.from(tableBody.querySelectorAll('tr'));
-    
-    // Pagination settings
-    const rowsPerPage = 10;
-    let currentPage = 1;
-    let filteredRows = [...rows];
-    
-    // Create pagination container
-    const paginationContainer = document.createElement('div');
-    paginationContainer.className = 'card-footer d-flex justify-content-between align-items-center';
-    userTable.parentNode.insertAdjacentElement('afterend', paginationContainer);
-    
-    // Initialize the table
-    initTable();
-    
-    // Search functionality
-    if (searchInput) {
-        searchInput.addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase().trim();
-            
-            // Filter rows based on search term
-            filteredRows = rows.filter(row => {
-                const name = row.querySelector('a.text-gray-800').textContent.toLowerCase();
-                const email = row.querySelector('td:nth-child(3)') ? 
-                    row.querySelector('td:nth-child(3)').textContent.toLowerCase() : '';
-                const phone = row.querySelector('.badge') ? 
-                    row.querySelector('.badge').textContent.toLowerCase() : '';
-                
-                return name.includes(searchTerm) || 
-                       email.includes(searchTerm) || 
-                       phone.includes(searchTerm);
-            });
-            
-            // Reset to first page when searching
-            currentPage = 1;
-            
-            // Update the table
-            updateTable();
-        });
-    }
-    
-    // Initialize the table and pagination
-    function initTable() {
-        updateTable();
-    }
-    
-    // Update the table based on current filters and pagination
-    function updateTable() {
-        // Clear table body
-        tableBody.innerHTML = '';
-        
-        // Calculate pagination
-        const startIndex = (currentPage - 1) * rowsPerPage;
-        const endIndex = startIndex + rowsPerPage;
-        const paginatedRows = filteredRows.slice(startIndex, endIndex);
-        
-        // No results message
-        if (paginatedRows.length === 0) {
-            const noResultsRow = document.createElement('tr');
-            noResultsRow.innerHTML = `<td colspan="5" class="text-center py-10">No matching records found</td>`;
-            tableBody.appendChild(noResultsRow);
-        } else {
-            // Add rows to the table
-            paginatedRows.forEach(row => {
-                tableBody.appendChild(row.cloneNode(true));
+    // Document ready function
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize variables
+        const userTable = document.querySelector('#kt_table_users');
+        const searchInput = document.querySelector('[data-kt-user-table-filter="search"]');
+        const tableBody = userTable.querySelector('tbody');
+        const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+        // Pagination settings
+        const rowsPerPage = 10;
+        let currentPage = 1;
+        let filteredRows = [...rows];
+
+        // Create pagination container
+        const paginationContainer = document.createElement('div');
+        paginationContainer.className = 'card-footer d-flex justify-content-between align-items-center';
+        userTable.parentNode.insertAdjacentElement('afterend', paginationContainer);
+
+        // Initialize the table
+        initTable();
+
+        // Search functionality
+        if (searchInput) {
+            searchInput.addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase().trim();
+
+                // Filter rows based on search term
+                filteredRows = rows.filter(row => {
+                    const name = row.querySelector('a.text-gray-800').textContent.toLowerCase();
+                    const email = row.querySelector('td:nth-child(3)') ?
+                        row.querySelector('td:nth-child(3)').textContent.toLowerCase() : '';
+                    const phone = row.querySelector('.badge') ?
+                        row.querySelector('.badge').textContent.toLowerCase() : '';
+
+                    return name.includes(searchTerm) ||
+                        email.includes(searchTerm) ||
+                        phone.includes(searchTerm);
+                });
+
+                // Reset to first page when searching
+                currentPage = 1;
+
+                // Update the table
+                updateTable();
             });
         }
-        
-        // Update pagination UI
-        updatePagination();
-    }
-    
-    // Update pagination controls
-    function updatePagination() {
-        const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
-        
-        // Create pagination HTML
-        let paginationHTML = `
+
+        // Initialize the table and pagination
+        function initTable() {
+            updateTable();
+        }
+
+        // Update the table based on current filters and pagination
+        function updateTable() {
+            // Clear table body
+            tableBody.innerHTML = '';
+
+            // Calculate pagination
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const endIndex = startIndex + rowsPerPage;
+            const paginatedRows = filteredRows.slice(startIndex, endIndex);
+
+            // No results message
+            if (paginatedRows.length === 0) {
+                const noResultsRow = document.createElement('tr');
+                noResultsRow.innerHTML = `<td colspan="5" class="text-center py-10">No matching records found</td>`;
+                tableBody.appendChild(noResultsRow);
+            } else {
+                // Add rows to the table
+                paginatedRows.forEach(row => {
+                    tableBody.appendChild(row.cloneNode(true));
+                });
+            }
+
+            // Update pagination UI
+            updatePagination();
+        }
+
+        // Update pagination controls
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredRows.length / rowsPerPage);
+
+            // Create pagination HTML
+            let paginationHTML = `
             <div class="fs-6 fw-semibold text-gray-700">
                 Showing ${filteredRows.length > 0 ? (currentPage - 1) * rowsPerPage + 1 : 0} 
                 to ${Math.min(currentPage * rowsPerPage, filteredRows.length)} 
@@ -363,26 +368,26 @@ document.addEventListener('DOMContentLoaded', function() {
                     </a>
                 </li>
         `;
-        
-        // Generate page numbers
-        const maxVisiblePages = 5;
-        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-        let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-        
-        // Adjust if we're at the edge of the page range
-        if (endPage - startPage + 1 < maxVisiblePages && startPage > 1) {
-            startPage = Math.max(1, endPage - maxVisiblePages + 1);
-        }
-        
-        for (let i = startPage; i <= endPage; i++) {
-            paginationHTML += `
+
+            // Generate page numbers
+            const maxVisiblePages = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+            // Adjust if we're at the edge of the page range
+            if (endPage - startPage + 1 < maxVisiblePages && startPage > 1) {
+                startPage = Math.max(1, endPage - maxVisiblePages + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `
                 <li class="page-item ${currentPage === i ? 'active' : ''}">
                     <a href="#" class="page-link" data-page="${i}">${i}</a>
                 </li>
             `;
-        }
-        
-        paginationHTML += `
+            }
+
+            paginationHTML += `
                 <li class="page-item ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}">
                     <a href="#" class="page-link" data-page="next">
                         <i class="fas fa-angle-right"></i>
@@ -390,44 +395,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 </li>
             </ul>
         `;
-        
-        // Update the pagination container
-        paginationContainer.innerHTML = paginationHTML;
-        
-        // Add event listeners to pagination controls
-        document.querySelectorAll('.page-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const page = this.getAttribute('data-page');
-                
-                if (page === 'prev') {
-                    if (currentPage > 1) currentPage--;
-                } else if (page === 'next') {
-                    if (currentPage < totalPages) currentPage++;
-                } else {
-                    currentPage = parseInt(page);
-                }
-                
-                updateTable();
+
+            // Update the pagination container
+            paginationContainer.innerHTML = paginationHTML;
+
+            // Add event listeners to pagination controls
+            document.querySelectorAll('.page-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const page = this.getAttribute('data-page');
+
+                    if (page === 'prev') {
+                        if (currentPage > 1) currentPage--;
+                    } else if (page === 'next') {
+                        if (currentPage < totalPages) currentPage++;
+                    } else {
+                        currentPage = parseInt(page);
+                    }
+
+                    updateTable();
+                });
             });
-        });
-    }
-    
-    // Initialize modals to work with dynamically loaded content
-    document.addEventListener('click', function(e) {
-        // Find closest button that triggers a modal
-        const button = e.target.closest('[data-bs-toggle="modal"]');
-        if (button) {
-            const targetModal = button.getAttribute('data-bs-target');
-            const modalElement = document.querySelector(targetModal);
-            
-            // Make sure modals are properly initialized after rows are changed
-            if (modalElement && !modalElement._bsModal) {
-                new bootstrap.Modal(modalElement);
-            }
         }
+
+        // Initialize modals to work with dynamically loaded content
+        document.addEventListener('click', function(e) {
+            // Find closest button that triggers a modal
+            const button = e.target.closest('[data-bs-toggle="modal"]');
+            if (button) {
+                const targetModal = button.getAttribute('data-bs-target');
+                const modalElement = document.querySelector(targetModal);
+
+                // Make sure modals are properly initialized after rows are changed
+                if (modalElement && !modalElement._bsModal) {
+                    new bootstrap.Modal(modalElement);
+                }
+            }
+        });
     });
-});
 </script>
 @endsection

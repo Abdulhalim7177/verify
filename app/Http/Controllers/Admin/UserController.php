@@ -19,20 +19,26 @@ class UserController extends Controller
         return view('admin.users.create');
     }
     
-
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
-
-        $validatedData['password'] = bcrypt($validatedData['password']);
-
-        User::create($validatedData);
-
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully');
+        try {
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'house_number' => 'required|string|max:255|unique:users',
+                'phone' => 'required|string|max:255|unique:users',
+                'street_address' => 'required|string|max:255',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
+            
+            $validatedData['password'] = bcrypt($validatedData['password']);
+            
+            User::create($validatedData);
+            
+            return redirect()->route('admin.users.index')->with('success', 'User created successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.users.index')->with('error', 'Failed to create user: ' . $e->getMessage());
+        }
     }
 
     public function edit(User $user)
@@ -42,13 +48,32 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $user->update($request->all());
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully');
+        try {
+            // Validate the request data
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+                'street_address' => 'nullable|string|max:255',
+                'house_number' => 'nullable|string|max:255',
+                'phone' => 'nullable|string|max:255',
+            ]);
+            
+            // Update the user with validated data
+            $user->update($validatedData);
+            
+            return redirect()->route('admin.users.index')->with('success', 'User updated successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.users.index')->with('error', 'Failed to update user: ' . $e->getMessage());
+        }
     }
 
     public function destroy(User $user)
     {
-        $user->delete();
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully');
+        try {
+            $user->delete();
+            return redirect()->route('admin.users.index')->with('success', 'User deleted successfully');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.users.index')->with('error', 'Failed to delete user: ' . $e->getMessage());
+        }
     }
 }

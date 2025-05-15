@@ -51,7 +51,7 @@
                         @csrf
                         <div class="form-group">
                             <label for="name">{{ __('Name') }}</label>
-                            <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}" required>
+                            <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}" disabled>
                         </div>
 
                         <div class="form-group">
@@ -60,16 +60,16 @@
 
                         <div class="form-group">
                             <label for="address">{{ __('Street Address') }}</label>
-                            <input type="text" name="street_address" id="street_address" class="form-control" value="{{ Auth::user()->street_address }}" required>
+                            <input type="text" name="street_address" id="street_address" class="form-control" value="{{ Auth::user()->street_address }}" disabled>
                         </div>
                         <div class="form-group">
                             <label for="address">{{ __('House Number') }}</label>
-                            <input type="text" name="house_number" id="house_number" class="form-control" value="{{ Auth::user()->house_number }}" required>
+                            <input type="text" name="house_number" id="house_number" class="form-control" value="{{ Auth::user()->house_number }}" disabled>
                         </div>
 
                         <div class="form-group">
                             <label for="phone">{{ __('Phone') }}</label>
-                            <input type="text" name="phone" id="phone" class="form-control" value="{{ Auth::user()->phone }}" required>
+                            <input type="text" name="phone" id="phone" class="form-control" value="{{ Auth::user()->phone }}" disabled>
                         </div>
 
                         <div class="form-group">
