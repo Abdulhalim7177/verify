@@ -9,18 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
-    {
-        Schema::create('subscriptions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('subscription_plan_id')->constrained()->onDelete('cascade');
-            $table->timestamp('starts_at');
-            $table->timestamp('ends_at');
-            $table->string('status')->default('active'); // active, expired
-            $table->timestamps();
-        });
-    }
+   public function up()
+{
+    Schema::create('subscriptions', function (Blueprint $table) {
+        $table->id();
+        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->foreignId('subscription_plan_id')->constrained()->onDelete('cascade');
+        $table->timestamp('starts_at')->useCurrent(); // ✅ Auto-sets current timestamp
+        $table->timestamp('ends_at')->nullable(); // ✅ Allows NULL, avoids default value issue
+        $table->string('status')->default('active'); // active, expired
+        $table->timestamps();
+    });
+}
+
     
 
     /**
