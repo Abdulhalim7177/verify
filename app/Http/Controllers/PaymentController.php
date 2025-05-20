@@ -2,39 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\SubAccount;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use App\Models\{SubscriptionPlan, Transaction, Subscription};
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
     public function pay(Request $request, $planId)
     {
-
         $plan = SubscriptionPlan::findOrFail($planId);
         $user = Auth::user();
-
-        $sub = SubAccount::where('email', $user->email)->first();
-
-        $owner = $sub ? $sub->user : $user;
-        $hasActive = \App\Models\Subscription::where('user_id', $owner->id)
-            ->where('ends_at', '>=', now())
-            ->where('status', 'active')
-            ->exists();
-
-        if ($hasActive) {
-            return back()->with('error', 'An active subscription already exists for this account.');
-        }
 
         // NABRoll keys
         $apiKey = 'Pk_TeStHV9FnLZE1vSidgkH36b4s473lpKYkI58gYgc6M';
         $secret = 'Sk_teSTN-HY[n1]wIO32A-AU0XP5kRZ[tzHpOxQ6bf9]]';
 
-        $payerRefNo = 'REF' . now()->timestamp;
+    $payerRefNo = 'REF' . now()->format('YmdHis') . '_' . uniqid(); // ✅ unique
+$amount = number_format($plan->price, 2, '.', '');
 
-        $amount = number_format($plan->price, 2, '.', '');
+$hashString = $payerRefNo . $amount . $apiKey;
+$hash = hash_hmac('sha256', $hashString, $secret);
+
+// Continue as before...
 
         // Generate hash
         $hashString = $payerRefNo . $amount . $apiKey;
@@ -49,7 +39,7 @@ class PaymentController extends Controller
             "PayerName" => $user->name,
             "Email" => $user->email,
             "Mobile" => $user->phone ?? '08000000000',
-            "Description" => "Subscription for {$plan->name} (On behalf of {$owner->name})",
+            "Description" => "Subscription for {$plan->name}",
             "ResponseUrl" => route('payment.callback'),
             "MetaData" => "User ID: {$user->id}",
             "FeeBearer" => "Customer"
@@ -96,11 +86,8 @@ class PaymentController extends Controller
 
         // Correct hash for verification
         $amount = number_format($transaction->amount, 2, '.', '');
-
-        // $payerRefNo . $amount . $apiKey;
-
-        $hashStringSecond = $transaction->payer_ref_no . $amount . $transaction->transaction_ref . $apiKey;
-        $hash = hash_hmac('sha256', $hashStringSecond, $secret);
+        $hashString = $transaction->payer_ref_no . $amount . $transaction->transaction_ref . $apiKey;
+        $hash = hash_hmac('sha256', $hashString, $secret);
 
         $verifyPayload = [
             'ApiKey' => $apiKey,
@@ -122,13 +109,8 @@ class PaymentController extends Controller
 
             $plan = SubscriptionPlan::where('price', $result['amount'])->first();
 
-            $sub = \App\Models\SubAccount::where('email', auth()->user()->email)->first();
-            $owner = $sub ? $sub->user : auth()->user();
-            $user = Auth::user();
-
             Subscription::create([
-                'user_id' => $owner->id,
-                'paid_by_user_id' => $user->id, // actual payer (sub-account or same)
+                'user_id' => $transaction->user_id,
                 'subscription_plan_id' => $plan->id,
                 'starts_at' => now(),
                 'ends_at' => now()->addDays($plan->duration),
