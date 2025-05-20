@@ -4,7 +4,7 @@
 <div class="container">
     <div class="card mt-4">
         
-        <div class="card-body alert alert-info">
+        <div class="card-body border-primary shadow">
         <h1 class="text-center">Welcome, {{ auth()->user()->name }}</h1>
             @if (!$isActive)
                 <div class="alert alert-warning">

@@ -437,7 +437,7 @@
                     <main class="py-4 ">
                         @if ($globalSubscriptionStatus === 'expiring_soon')
                         <div class="container">
-
+  @include('partials.notifications')
                             <div class="alert alert-warning text-center mb-0 rounded-0">
                                 <strong>⏳ Your subscription is expiring soon:</strong>
                                 {{ ceil($globalDaysRemaining) }} day{{ ceil($globalDaysRemaining) > 1 ? 's' : '' }} left.

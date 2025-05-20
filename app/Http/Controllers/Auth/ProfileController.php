@@ -24,21 +24,21 @@ class ProfileController extends Controller
 
         // Validate the request
         $request->validate([
-            'name' => 'required|string|max:255',
-            'role' => 'required|string|max:255',
-            'street_address' => 'required|string|max:255',
-            'house_number' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            // 'name' => 'required|string|max:255',
+            // 'role' => 'required|string|max:255',
+            // 'street_address' => 'required|string|max:255',
+            // 'house_number' => 'required|string|max:255',
+            // 'phone' => 'required|string|max:20',
             'altphone' => 'required|string|max:20',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Update user details
-        $user->name = $request->name;
-        $user->role = $request->role;
-        $user->street_address = $request->street_address;
-        $user->house_number = $request->house_number;
-        $user->phone = $request->phone;
+        // $user->name = $request->name;
+        // $user->role = $request->role;
+        // $user->street_address = $request->street_address;
+        // $user->house_number = $request->house_number;
+        // $user->phone = $request->phone;
         $user->altphone = $request->altphone;
 
         // Handle profile image upload
